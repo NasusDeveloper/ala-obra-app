@@ -7,7 +7,7 @@ export default function App() {
     <View style={styles.container}>
       <Text>Hellow World!</Text>
       <StatusBar style="auto" />
-    </View>
+    </View>//esto en un comentario
   );
 }
 
