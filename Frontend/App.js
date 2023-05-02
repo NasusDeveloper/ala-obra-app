@@ -1,6 +1,10 @@
 import React from 'react';
-import Main from './src/components/Main.jsx'
+import { View, Text } from 'react-native';
 
 export default function App() {
-  return <Main />
+  return (
+    <View>
+      <Text>Hello world</Text>
+    </View>
+  )
 }
