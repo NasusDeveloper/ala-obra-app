@@ -1,6 +1,6 @@
 import config from "../config.js"
 import Role from "../models/roles.js";
-import User from "../models/users.js"
+import users from "../models/users.js"
 
 import jwt from "jsonwebtoken"
 
@@ -22,8 +22,8 @@ export const signup = async (req, res) => {
         newUser.roles = foundRoles.map(role => role._id) 
     }
     else{
-        //si el usuario no ingresa un roll, por defecto se le asigna el rol usuario
-        const role = await Role.findOne({name: "user"})
+        //si el usuario no ingresa un roll, por defecto se le asigna el rol Cliente
+        const role = await Role.findOne({name: "Cliente"})
         newUser.roles = [role._id]
     }
 
@@ -39,13 +39,13 @@ export const signup = async (req, res) => {
 export const signin = async (req, res) => {
     //Verificar el usuario
     try {
-        const userFound = await User.findOne({email: req.body.email}).populate("roles")
+        const userFound = await users.findOne({email: req.body.email}).populate("roles")
 
-        if(!userFound) throw new Error("User not found")
+        if(!userFound) throw new Error("Usuario no encontrado")
 
-        const matchPassword = await User.comparePassword(req.body.password, userFound.password)
+        const matchPassword = await users.comparePassword(req.body.password, userFound.password)
 
-        if(!matchPassword) throw new Error("Invalid password")
+        if(!matchPassword) throw new Error("Password invalida")
 
         const token = jwt.sign({id: userFound._id}, config.SECRET, {
             expiresIn: 86400
