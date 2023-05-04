@@ -1,7 +1,7 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import {};
-import { View, Text } from 'react-native';
+import React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import Checkbox from 'expo-checkbox'
+import { View, Text } from 'react-native'
 
 export default function App() {
   return (
