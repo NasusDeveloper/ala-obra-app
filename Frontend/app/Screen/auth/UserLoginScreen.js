@@ -78,16 +78,16 @@ const UserLoginScreen = () => {
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 1}}>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('RegisterScreen')}}>
-                 <Text style={{fontWeight:'Bold'}}>Has olvidado tu contraseña?</Text>
+              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('Register')}}>
+                 <Text style={{fontWeight:'bold'}}>Has olvidado tu contraseña?</Text>
               </TouchableWithoutFeedback>
 
             </View >
 
             <View style={{flex: 1}}>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('RegisterScreen')}}>
-                 <Text style={{fontWeight:'Bold'}}>Usuario nuevo? Registrese</Text>
+              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('Register')}}>
+                 <Text style={{fontWeight:'bold'}}>Usuario nuevo? Registrese</Text>
               
               </TouchableWithoutFeedback> 
           </View>

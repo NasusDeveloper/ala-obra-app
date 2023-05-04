@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, SafeAreaView, Keyboard, TouchableWithoutFeedback} from "react-native";
+import { View, Text, SafeAreaView, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useState } from "react";
-import { ScrollView, TextInput,  } from "react-native-gesture-handler";
+import { ScrollView, TextInput, } from "react-native-gesture-handler";
 import { styles, toastConfig } from "../../../style";
 import { Button } from "react-native";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
@@ -10,39 +10,39 @@ import Checkbox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
 
 const RegisterScreen = () => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-  
-    const clearTextInput = () => {
-      setEmail('')
-      setPassword('')
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const clearTextInput = () => {
+    setEmail('')
+    setPassword('')
+  }
+
+  const handleFormSubmit = () => {
+    if (email && password) {
+      console.log("Inicio de sesion exitoso")
+      const formData = { email, password }
+      console.log(formData)
+      clearTextInput()
+      Toast.show({
+        type: 'done',
+        position: 'top',
+        topOffset: 0,
+        text1: "Inicio de sesion exitoso"
+      })
+
+    } else {
+      console.log("Debe rellenar todos los campos")
+      Toast.show({
+        type: 'warning',
+        position: 'top',
+        topOffset: 0,
+        text1: "Debe rellenar todos los campos"
+      })
     }
-  
-    const handleFormSubmit = () => {
-      if (email && password) {
-        console.log("Inicio de sesion exitoso")
-        const formData = { email, password }
-        console.log(formData)
-        clearTextInput()
-        Toast.show({
-          type: 'done',
-          position: 'top',
-          topOffset: 0,
-          text1: "Inicio de sesion exitoso"
-        })
-  
-      } else {
-        console.log("Debe rellenar todos los campos")
-        Toast.show({
-          type: 'warning',
-          position: 'top',
-          topOffset: 0,
-          text1: "Debe rellenar todos los campos"
-        })
-      }
-    }
+  }
   return (
-<SafeAreaView>
+    <SafeAreaView>
       <Toast config={toastConfig} />
 
       <ScrollView keyboardShouldPersistTaps='handled'>
@@ -71,24 +71,24 @@ const RegisterScreen = () => {
             <Button title='Entrar' onPress={handleFormSubmit} color='purple' />
           </View>
 
-          <View style={{flexDirection: 'row'}}>
-            <View style={{flex: 1}}>
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 1 }}>
 
-              <TouchableWithoutFeedback onPress={()=>{console.log('Password Reset Screen')}}>
-                 <Text style={{fontWeight:'Bold'}}>Has olvidado tu contraseña?</Text>
+              <TouchableWithoutFeedback onPress={() => { console.log('Password Reset Screen') }}>
+                <Text style={{ fontWeight: 'bold' }}>Has olvidado tu contraseña?</Text>
               </TouchableWithoutFeedback>
 
             </View >
 
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
 
-              <TouchableWithoutFeedback onPress={()=>{console.log('New Register Screen')}}>
-                 <Text style={{fontWeight:'Bold'}}>Usuario nuevo? Registrese</Text>
-              </TouchableWithoutFeedback> 
-              
+              <TouchableWithoutFeedback onPress={() => { console.log('New Register Screen') }}>
+                <Text style={{ fontWeight: 'bold' }}>Usuario nuevo? Regese</Text>
+              </TouchableWithoutFeedback>
+
+            </View>
           </View>
         </View>
-      </View>
       </ScrollView>
     </SafeAreaView>
   )
