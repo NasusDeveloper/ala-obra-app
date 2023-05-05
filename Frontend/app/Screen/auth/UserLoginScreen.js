@@ -87,7 +87,7 @@ const UserLoginScreen = () => {
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 1}}>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('Register')}}>
+              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('SendPasswordResetEmail')}}>
                  <Text style={{fontWeight:'bold'}}>Has olvidado tu contraseña?</Text>
               </TouchableWithoutFeedback>
 
