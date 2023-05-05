@@ -8,6 +8,7 @@ import { Toast } from "react-native-toast-message/lib/src/Toast";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from "@react-navigation/native";
 import { TouchableWithoutFeedback } from "react-native";
+import Checkbox from "expo-checkbox";
 
 
 
@@ -16,9 +17,11 @@ const UserLoginScreen = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const navigation = useNavigation()
+  const [tc, setTc] = useState("false")
   const clearTextInput = () => {
     setEmail('')
     setPassword('')
+    setTc('false')
   }
 
   const handleFormSubmit = () => {
@@ -71,6 +74,12 @@ const UserLoginScreen = () => {
               onPress={console.log(password)} secureTextEntry={true} />
 
           </View>
+
+          <View style={{ flex: 1, flexDirection: 'row' , marginTop: 10}}>
+              <Checkbox value={tc} onValueChange={setTc} color={tc ? '#4630EB' : undefined} />
+              <Text style={styles.labelText}>Mantener sesion iniciada </Text>
+            </View>
+
           <View style={{ width: 200, alignSelf: 'center', margin: 20 }}>
             <Button title='Entrar' onPress={handleFormSubmit} color='purple' />
           </View>
