@@ -112,5 +112,4 @@ Toast.show({
     </SafeAreaView>
   )
 }
-
 export default RegisterScreen
