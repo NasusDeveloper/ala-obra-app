@@ -1,16 +1,19 @@
-import React from "react";
-import { View, Text, SafeAreaView, Keyboard } from "react-native";
-import { useState } from "react";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { styles, toastConfig } from "../../../style";
-import { Button } from "react-native";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
+import React from "react"
+import axios from "axios"
+import { useState } from "react"
+
+import { TouchableWithoutFeedback } from "react-native"
+
+import { View, Text, SafeAreaView, Keyboard } from "react-native"
+import { ScrollView, TextInput } from "react-native-gesture-handler"
+
+import { Button } from "react-native"
+import Checkbox from "expo-checkbox"
+import { useNavigation } from "@react-navigation/native"
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import { useNavigation } from "@react-navigation/native";
-import { TouchableWithoutFeedback } from "react-native";
-import Checkbox from "expo-checkbox";
 
-
+import { Toast } from "react-native-toast-message/lib/src/Toast"
+import { styles, toastConfig } from "../../../style"
 
 const UserLoginScreen = () => {
 
@@ -23,7 +26,7 @@ const UserLoginScreen = () => {
     setPassword('')
     setTc('false')
   }
-
+ 
   const handleFormSubmit = () => {
     if (email && password) {
       console.log("Inicio de sesion exitoso")

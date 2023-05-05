@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
 }
 )
 
+
 const toastConfig = {
     warning: ({ text1, props }) => (
         <View style={{ height: 30, width: '100%', backgroundColor: 'orange', padding: 4, }}>
