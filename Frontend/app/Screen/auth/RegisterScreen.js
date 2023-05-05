@@ -32,7 +32,7 @@ const RegisterScreen = () => {
   const navigation = useNavigation()
 
   const handleFormSubmit = async () => {
-    if (name && email && password && password_confirmation && tc) {
+    if (name && email && password && password_confirmation && tc && rut) {
       if (password === password_confirmation) {
         const formData = { name, rut ,email, password ,password_confirmation, tc}
         console.log(formData)
