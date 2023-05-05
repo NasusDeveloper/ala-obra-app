@@ -27,19 +27,31 @@ const UserLoginScreen = () => {
     setTc('false')
   }
  
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     if (email && password) {
-      console.log("Inicio de sesion exitoso")
-      const formData = { email, password }
-      console.log(formData)
-      clearTextInput()
-      Toast.show({
-        type: 'done',
-        position: 'top',
-        topOffset: 0,
-        text1: "Inicio de sesion exitoso"
-      })
-
+      try {
+        const response = await axios.post("http://localhost:8080/api/auth/signin", {
+          email,
+          password
+        })
+        console.log("Inicio de sesión exitoso")
+        console.log(response.data)
+        clearTextInput()
+        Toast.show({
+          type: 'done',
+          position: 'top',
+          topOffset: 0,
+          text1: "Inicio de sesión exitoso"
+        })
+      } catch (error) {
+        console.log("Error al iniciar sesión:", error.message)
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          topOffset: 0,
+          text1: "Error al iniciar sesión"
+        })
+      }
     } else {
       console.log("Debe rellenar todos los campos")
       Toast.show({

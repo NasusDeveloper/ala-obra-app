@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import { View, Text, SafeAreaView, Keyboard } from "react-native";
 import { useState } from "react";
 import { ScrollView, TextInput, } from "react-native-gesture-handler";
@@ -13,6 +14,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const RegisterScreen = () => {
   const [name, setName] = useState("")
+  const [rut, setRut] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [password_confirmation, setPassword_confirmation] = useState("")
@@ -20,6 +22,7 @@ const RegisterScreen = () => {
 
   const clearTextInput = () => {
     setName('')
+    setRut('')
     setEmail('')
     setPassword('')
     setPassword_confirmation('')
@@ -28,35 +31,50 @@ const RegisterScreen = () => {
 
   const navigation = useNavigation()
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     if (name && email && password && password_confirmation && tc) {
-if(password === password_confirmation){
-  console.log("Registro Exitoso")
-  const formData = { name, email, password ,password_confirmation, tc}
-  console.log(formData)
-  clearTextInput()
-  Toast.show({
-    type: 'done',
-    position: 'top',
-    topOffset: 0,
-    text1: "Registro Exitoso"
-  })
-}else{console.log("Las contraseñas no coinciden")
-Toast.show({
-  type: 'warning',
-  position: 'top',
-  topOffset: 0,
-  text1: "Las contraseñas no coinciden"
-})
-}
-} else {console.log("Debe rellenar todos los campos")
-Toast.show({
-  type: 'warning',
-  position: 'top',
-  topOffset: 0,
-  text1: "Debe rellenar todos los campos"
-})
-}}
+      if (password === password_confirmation) {
+        const formData = { name, rut ,email, password ,password_confirmation, tc}
+        console.log(formData)
+        clearTextInput()
+        try {
+          const response = await axios.post('http://localhost:8080/api/auth/signup', formData);
+          console.log(response.data);
+          Toast.show({
+            type: 'done',
+            position: 'top',
+            topOffset: 0,
+            text1: "Registro Exitoso"
+          })
+        } catch (error) {
+          console.error(error);
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            topOffset: 0,
+            text1: "Error al registrar"
+          })
+        }
+      } else {
+        console.log("Las contraseñas no coinciden");
+        Toast.show({
+          type: 'warning',
+          position: 'top',
+          topOffset: 0,
+          text1: "Las contraseñas no coinciden"
+        })
+      }
+    } else {
+      console.log("Debe rellenar todos los campos");
+      Toast.show({
+        type: 'warning',
+        position: 'top',
+        topOffset: 0,
+        text1: "Debe rellenar todos los campos"
+      })
+    }
+  }
+
   return (
     <SafeAreaView>
       <Toast config={toastConfig} />
@@ -72,6 +90,12 @@ Toast.show({
               <Text style={styles.labelText}>Nombre:</Text>
               <TextInput style={styles.input} Value={name} onChangeText={setName} 
               placeholder="Escribe tu Nombre" onPress={console.log(name)} />
+            </View>
+
+            <View style={styles.inputWithLabel}>
+              <Text style={styles.labelText}>Rut:</Text>
+              <TextInput style={styles.input} Value={rut} onChangeText={setRut} 
+              placeholder="Escribe tu rut" onPress={console.log(rut)} />
             </View>
 
             <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
