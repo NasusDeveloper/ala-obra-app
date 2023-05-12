@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+
 import { View, Text, SafeAreaView, Keyboard } from "react-native";
 import { useState } from "react";
 import { ScrollView, TextInput, } from "react-native-gesture-handler";
@@ -32,14 +33,18 @@ const RegisterScreen = () => {
   const navigation = useNavigation()
 
   const handleFormSubmit = async () => {
-    if (name && email && password && password_confirmation && tc && rut) {
+    if (name && rut && email && password && password_confirmation && tc) {
       if (password === password_confirmation) {
-        const formData = { name, rut ,email, password ,password_confirmation, tc}
+        const formData = { name, rut, email, password, password_confirmation, tc }
         console.log(formData)
         clearTextInput()
         try {
-          const response = await axios.post('http://localhost:8080/api/auth/signup', formData);
-          console.log(response.data);
+          const response = await axios.post("http://localhost:8080/api/auth/register", formData, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          console.log(response.data)
           Toast.show({
             type: 'done',
             position: 'top',
@@ -47,7 +52,7 @@ const RegisterScreen = () => {
             text1: "Registro Exitoso"
           })
         } catch (error) {
-          console.error(error);
+          console.error(error)
           Toast.show({
             type: 'error',
             position: 'top',
@@ -56,7 +61,7 @@ const RegisterScreen = () => {
           })
         }
       } else {
-        console.log("Las contraseñas no coinciden");
+        console.log("Las contraseñas no coinciden")
         Toast.show({
           type: 'warning',
           position: 'top',
@@ -65,7 +70,7 @@ const RegisterScreen = () => {
         })
       }
     } else {
-      console.log("Debe rellenar todos los campos");
+      console.log("Debe rellenar todos los campos")
       Toast.show({
         type: 'warning',
         position: 'top',
@@ -74,7 +79,7 @@ const RegisterScreen = () => {
       })
     }
   }
-
+  
   return (
     <SafeAreaView>
       <Toast config={toastConfig} />
