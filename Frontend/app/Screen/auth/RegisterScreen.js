@@ -17,48 +17,46 @@ const RegisterScreen = () => {
   const [name, setName] = useState("")
   const [rut, setRut] = useState("")
   const [email, setEmail] = useState("")
+  const [direccion, setDireccion] = useState ("")
+  const [roles, setRoles] = useState ("")
   const [password, setPassword] = useState("")
   const [password_confirmation, setPassword_confirmation] = useState("")
-  const [tc, setTc] = useState("false")
+  const [tc, setTc] = useState("") //terminos y condiciones
 
   const clearTextInput = () => {
-    setName('')
-    setRut('')
-    setEmail('')
-    setPassword('')
-    setPassword_confirmation('')
-    setTc('false')
+    setName("")
+    setRut("")
+    setEmail("")
+    setDireccion ("")
+    setRoles ("")
+    setPassword("")
+    setPassword_confirmation("")
+    setTc("")
   }
 
   const navigation = useNavigation()
 
   const handleFormSubmit = async () => {
 
-    if (name && rut && email && password && password_confirmation && tc) {
+    if (name && rut && email && direccion && roles && password && password_confirmation && tc) {
 
       if (password === password_confirmation) {
 
-        const formData = { name, rut, email, password, password_confirmation, tc }
+        const formData = { name, rut, email, direccion, roles, password, password_confirmation, tc }
 
         console.log(formData)
 
-        clearTextInput()
-
         try {
-          const response = await axios.post("http://localhost:8080/api/auth/register", formData, {
+          const response = await axios.post("http://10.42.48.131:8000/api/auth/signup", formData, {
             withCredentials: true,
             headers: {
               "Content-Type": "application/json"
             }
           })
 
-          .then(response => {
             console.log(response.data)
-          })
-          
-          .catch(error => {
+        
             console.log(error)
-          })
 
           Toast.show({
             type: 'done',
@@ -122,6 +120,18 @@ const RegisterScreen = () => {
               <Text style={styles.labelText}>Email: </Text>
               <TextInput style={styles.input} Value={email} placeholder="Ingresa tu Correo electronico"
                 onChangeText={setEmail} onPress={console.log(email)} KeyboardType='email-address'></TextInput>
+            </View>
+
+            <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
+              <Text style={styles.labelText}>Direccion: </Text>
+              <TextInput style={styles.input} Value={direccion} placeholder="Ingresa tu Direccion"
+                onChangeText={setDireccion} onPress={console.log(direccion)}></TextInput>
+            </View>
+
+            <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
+              <Text style={styles.labelText}>Rol: </Text>
+              <TextInput style={styles.input} Value={roles} placeholder="Roles"
+                onChangeText={setRoles} onPress={console.log(roles)}></TextInput>
             </View>
 
             <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>

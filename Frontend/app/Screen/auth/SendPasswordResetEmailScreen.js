@@ -1,10 +1,9 @@
-import { View, Text, Button, TextInput } from 'react-native';
-import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Toast from 'react-native-toast-message';
-import axios from 'axios';
-import { styles, toastConfig } from '../../../style';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, Button, TextInput } from 'react-native'
+import React, { useState } from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import Toast from 'react-native-toast-message'
+import axios from 'axios'
+import { styles, toastConfig } from '../../../style'
 
 const SendPasswordResetEmailScreen = () => {
   const [email, setEmail] = useState('');

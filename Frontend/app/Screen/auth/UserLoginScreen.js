@@ -20,17 +20,17 @@ const UserLoginScreen = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const navigation = useNavigation()
-  const [tc, setTc] = useState("false")
+  const [tc, setTc] = useState("")
   const clearTextInput = () => {
     setEmail('')
     setPassword('')
-    setTc('false')
+    setTc('')
   }
  
   const handleFormSubmit = async () => {
     if (email && password) {
       try {
-        const response = await axios.post("http://localhost:8080/api/auth/signin", {
+        const response = await axios.post("http://10.42.48.131:8000/api/auth/signin", {
           email,
           password
         })
