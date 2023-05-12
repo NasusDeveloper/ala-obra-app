@@ -1,15 +1,15 @@
-import React from "react";
-import axios from "axios";
+import React from "react"
+import axios from "axios"
 
-import { View, Text, SafeAreaView, Keyboard } from "react-native";
-import { useState } from "react";
-import { ScrollView, TextInput, } from "react-native-gesture-handler";
-import { styles, toastConfig } from "../../../style";
-import { Button } from "react-native";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
-import Checkbox from "expo-checkbox";
-import { useNavigation } from "@react-navigation/native";
-import { TouchableWithoutFeedback } from "react-native";
+import { View, Text, SafeAreaView, Keyboard } from "react-native"
+import { useState } from "react"
+import { ScrollView, TextInput, } from "react-native-gesture-handler"
+import { styles, toastConfig } from "../../../style"
+import { Button } from "react-native"
+import { Toast } from "react-native-toast-message/lib/src/Toast"
+import Checkbox from "expo-checkbox"
+import { useNavigation } from "@react-navigation/native"
+import { TouchableWithoutFeedback } from "react-native"
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 
@@ -33,18 +33,33 @@ const RegisterScreen = () => {
   const navigation = useNavigation()
 
   const handleFormSubmit = async () => {
+
     if (name && rut && email && password && password_confirmation && tc) {
+
       if (password === password_confirmation) {
+
         const formData = { name, rut, email, password, password_confirmation, tc }
+
         console.log(formData)
+
         clearTextInput()
+
         try {
           const response = await axios.post("http://localhost:8080/api/auth/register", formData, {
+            withCredentials: true,
             headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          console.log(response.data)
+              "Content-Type": "application/json"
+            }
+          })
+
+          .then(response => {
+            console.log(response.data)
+          })
+          
+          .catch(error => {
+            console.log(error)
+          })
+
           Toast.show({
             type: 'done',
             position: 'top',

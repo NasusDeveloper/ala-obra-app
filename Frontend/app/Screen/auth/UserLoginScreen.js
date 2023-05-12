@@ -34,9 +34,13 @@ const UserLoginScreen = () => {
           email,
           password
         })
+
         console.log("Inicio de sesión exitoso")
+
         console.log(response.data)
+
         clearTextInput()
+        
         Toast.show({
           type: 'done',
           position: 'top',
