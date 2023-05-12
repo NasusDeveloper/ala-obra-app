@@ -11,16 +11,15 @@ import usersRoutes from "./routes/users.routes.js"
 const app = express()
 createRoles()
 
+
 // Configuración de CORS
 const corsOption = {
-    origin: "http://localhost:8080", 
+    origin: "http://localhost:8080",
     methods: "GET, POST, PUT, DELETE", // Métodos HTTP permitidos
-    allowedHeaders: "Content-Type, Authorization", // Encabezados permitidos  z
+    allowedHeaders: "Content-Type, Authorization" // Encabezados permitidos  z
   }
 
 app.use(cors(corsOption)) //Habilitar CORS
-
-createRoles()
 
 app.use(express.json());
 
