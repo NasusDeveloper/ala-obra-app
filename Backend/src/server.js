@@ -1,17 +1,26 @@
 import "./db/database.js"
+
 import express from "express"
 import morgan from "morgan"
-import cors from "cors";
+import cors from "cors"
 
 import { createRoles } from "./libs/initialSetup.js";
-
 import authRoutes from "./routes/auth.routes.js"
 import usersRoutes from "./routes/users.routes.js"
 
 const app = express()
 createRoles()
 
-app.use(cors({ origin: "*" }));
+// Configuración de CORS
+const corsOption = {
+    origin: "http://localhost:8080", 
+    methods: "GET, POST, PUT, DELETE", // Métodos HTTP permitidos
+    allowedHeaders: "Content-Type, Authorization", // Encabezados permitidos  z
+  }
+
+app.use(cors(corsOption)) //Habilitar CORS
+
+createRoles()
 
 app.use(express.json());
 
