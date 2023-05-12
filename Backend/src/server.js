@@ -34,5 +34,5 @@ app.use("/api/users", usersRoutes)
 
 export default app
 
-app.listen(8080)
-console.log("Server listen on port", 8080)
+app.listen(8000)
+console.log("Server listen on port", 8000)
