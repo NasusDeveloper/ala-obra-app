@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
     }
     else{
         //si el usuario no ingresa un roll, por defecto se le asigna el rol Cliente
-        const role = await Role.findOne({name: "Cliente"})
+        const role = await Role.findOne({name: "cliente"})
         newUser.roles = [role._id]
     }
 
