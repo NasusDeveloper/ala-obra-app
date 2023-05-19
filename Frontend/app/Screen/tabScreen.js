@@ -2,12 +2,12 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { View,Text } from "react-native";
-import HomeScreen from "./shop/HomeScreen";
+import HomeScreen from "./HomeScreen";
 import React from "react";
 
 
 const Drawer = createDrawerNavigator();
-const ShopTab = () =>{
+const TabScreen = () =>{
     const navigation = useNavigation();
     return(
     <Drawer.Navigator screenOptions={{headerStyle: {backgroundColor:'purple'}
@@ -21,4 +21,4 @@ const ShopTab = () =>{
     </Drawer.Navigator>
     )
     }
-    export default ShopTab
+    export default TabScreen
