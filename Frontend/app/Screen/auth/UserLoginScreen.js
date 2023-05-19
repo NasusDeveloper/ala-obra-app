@@ -10,6 +10,7 @@ import { ScrollView, TextInput } from "react-native-gesture-handler"
 import { Button } from "react-native"
 import Checkbox from "expo-checkbox"
 import { useNavigation } from "@react-navigation/native"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import { Toast } from "react-native-toast-message/lib/src/Toast"
@@ -47,6 +48,13 @@ const UserLoginScreen = () => {
           topOffset: 0,
           text1: "Inicio de sesión exitoso"
         })
+
+        //Guardar el token en el almacenamiento local
+        await AsyncStorage.setItem("token", response.data.token)
+
+        //Redirigir al usuario a la pantalla de inicio
+        navigation.navigate("HomeScreen")
+
       } catch (error) {
         console.log("Error al iniciar sesión:", error.message)
         Toast.show({

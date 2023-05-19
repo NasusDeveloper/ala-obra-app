@@ -25,7 +25,7 @@ const TabScreen = () => {
             
             </TouchableWithoutFeedback>}}/>
 
-            <Drawer.Screen name="Solicitud" component={SolicitudScreen} />
+            <Drawer.Screen name="Solicitud" component={SolicitudScreen} options={{headerTitle:"Crear solicitud", drawerActiveTintColor:"black"}}/>
 
      </Drawer.Navigator>
 

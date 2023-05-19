@@ -9,18 +9,18 @@ const userSchema = new Schema({
     },
     rut: {
         type: String,
-        unique: true,
+        unique: true
     },
     email: {
         type: String,
-        unique: true,
+        unique: true
     },
     password: {
         type: String,
         require: true
     },
     direcction: {
-        type: String,
+        type: String
     },
     roles: [{
         ref: "Role",

@@ -1,14 +1,30 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { View, Text} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import SolicitudScreen from './SolicitudScreen';
+
+const Drawer = createDrawerNavigator();
 
 const HomeScreen = () => {
-  return (
-    <View>
-      <Text style={{fontSize:34,fontWeight:'bold'}}>AlaObra</Text>
-      <Text style={{fontSize:30,fontWeight:'bold'}}>No se puedo conectar al back end</Text>
-      
-    </View>
-  )
-}
+  const navigation = useNavigation();
 
-export default HomeScreen
+
+
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Welcome to the Home Screen!</Text>
+    </View>
+  );
+};
+
+const DrawerNavigator = () => {
+  return (
+    <Drawer.Navigator>
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="SolicitudScreen" component={SolicitudScreen} />
+    </Drawer.Navigator>
+  );
+};
+
+export default DrawerNavigator;
