@@ -7,7 +7,7 @@ import SendPasswordResetEmailScreen from './app/Screen/auth/SendPasswordResetEma
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import TabScreen from './app/Screen/tabScreen'
+import TabScreen from './app/Screen/TabScreen'
 
 
 const stack = createNativeStackNavigator();

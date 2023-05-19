@@ -6,6 +6,7 @@ const HomeScreen = () => {
     <View>
       <Text style={{fontSize:34,fontWeight:'bold'}}>AlaObra</Text>
       <Text style={{fontSize:30,fontWeight:'bold'}}>No se puedo conectar al back end</Text>
+      
     </View>
   )
 }
