@@ -19,7 +19,7 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("")
   const [password_confirmation, setPassword_confirmation] = useState("")
   const [direcction, setDirecction] = useState("")
-  const [roles, setRoles] = useState("Trabajador")
+  const [roles, setRoles] = useState("Cliente")
   const [tc, setTc] = useState(false)
 
   const clearTextInput = () => {
@@ -29,6 +29,7 @@ const RegisterScreen = () => {
     setPassword("")
     setPassword_confirmation("")
     setDirecction("")
+    setRoles("Cliente")
     setTc(false)
   }
 

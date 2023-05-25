@@ -30,6 +30,7 @@ const RegisterTrabajadorScreen = () => {
     setPassword("")
     setPassword_confirmation("")
     setDirecction("")
+    setRoles("Trabajador")
     setTc(false)
   }
 

@@ -114,7 +114,7 @@ const UserLoginScreen = () => {
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 1}}>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('SendPasswordResetEmail')}}>
+              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('SendPasswordResetEmailScreen')}}>
                  <Text style={{fontWeight:'bold'}}>Has olvidado tu contraseña?</Text>
               </TouchableWithoutFeedback>
 
@@ -122,11 +122,20 @@ const UserLoginScreen = () => {
 
             <View style={{flex: 1}}>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('Register')}}>
-                 <Text style={{fontWeight:'bold'}}>Usuario nuevo? Registrese</Text>
-              
+              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('RegisterScreen')}}>
+                 <Text style={{fontWeight:'bold'}}>Usuario nuevo? Registrese como Cliente</Text>
               </TouchableWithoutFeedback> 
+
           </View>
+          
+          <View style={{flex: 1}}>
+
+              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('RegisterTrabajadorScreen')}}>
+                 <Text style={{fontWeight:'bold'}}>Usuario nuevo? Registrese como Trabajador</Text>
+              </TouchableWithoutFeedback> 
+              
+          </View>
+
         </View>
       </View>
       </ScrollView>
