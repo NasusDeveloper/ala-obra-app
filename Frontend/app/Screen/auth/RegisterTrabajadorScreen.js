@@ -12,7 +12,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import axios from "axios";
 
 
-const RegisterScreen = () => {
+const RegisterTrabajadorScreen = () => {
   const [name, setName] = useState("")
   const [rut, setRut] = useState("")
   const [email, setEmail] = useState("")
@@ -20,6 +20,7 @@ const RegisterScreen = () => {
   const [password_confirmation, setPassword_confirmation] = useState("")
   const [direcction, setDirecction] = useState("")
   const [roles, setRoles] = useState("Trabajador")
+  const [fotos, setFotos] = useState([])
   const [tc, setTc] = useState(false)
 
   const clearTextInput = () => {
@@ -32,11 +33,31 @@ const RegisterScreen = () => {
     setTc(false)
   }
 
+  const handleImageUpload = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      console.log("Permission not granted!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+      allowsMultipleSelection: true,
+      maxNumberOfFiles: 5 - fotos.length,
+    });
+
+    if (!result.cancelled) {
+      setFotos([...fotos, result.uri]);
+    }
+  };
+
   const navigation = useNavigation()
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
 
-    if (name && rut &&email && password && password_confirmation && direcction && tc) {
+    if (name && rut &&email && password && password_confirmation && direcction && fotos && tc) {
 
       if(password === password_confirmation) {
 
@@ -49,7 +70,8 @@ const RegisterScreen = () => {
           password_confirmation: password_confirmation,
           direcction: direcction,
           roles: "Trabajador",
-          tc,
+          fotos,
+          tc
         }
         //Coneccion a axios
         axios
@@ -182,4 +204,4 @@ const RegisterScreen = () => {
   )
 }
 
-export default RegisterScreen
+export default RegisterTrabajadorScreen
