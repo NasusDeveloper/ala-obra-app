@@ -16,6 +16,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Toast } from "react-native-toast-message/lib/src/Toast"
 import { styles, toastConfig } from "../../../style"
 
+
 const UserLoginScreen = () => {
 
   const [email, setEmail] = useState("")

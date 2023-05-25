@@ -8,6 +8,7 @@ import UserLoginScreen from './app/Screen/auth/UserLoginScreen';
 import RegisterScreen from './app/Screen/auth/RegisterScreen';
 import SendPasswordResetEmailScreen from './app/Screen/auth/SendPasswordResetEmailScreen';
 import HomeScreen from './app/Screen/HomeScreen';
+import RegisterTrabajadorScreen from './app/Screen/auth/RegisterTrabajadorScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +48,11 @@ export default function App() {
           name="RegisterScreen"
           component={RegisterScreen}
           options={{ title: 'Registro', headerBackVisible: false }}
+        />
+        <Stack.Screen
+          name="RegisterTrabajadorScreen"
+          component={RegisterTrabajadorScreen}
+          options={{ title: 'Registro Trabajador', headerBackVisible: false }}
         />
         <Stack.Screen
           name="SendPasswordResetEmailScreen"

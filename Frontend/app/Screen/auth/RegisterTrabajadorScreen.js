@@ -187,7 +187,7 @@ const RegisterTrabajadorScreen = () => {
 
             <View style={{ alignItems: 'flex-end' }}>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('UserLogin')}}>
+              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('UserLoginScreen')}}>
 
                 <Text style={{ fontWeight:'bold'}}>Ya se ha registrado? inicie sesion</Text>
 
@@ -204,5 +204,4 @@ const RegisterTrabajadorScreen = () => {
     </SafeAreaView>
   )
 }
-
 export default RegisterTrabajadorScreen
