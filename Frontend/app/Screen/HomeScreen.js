@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import SolicitudScreen from './solicitudScreen';
+import SolicitudScreen from './SolicitudScreen';
 
 const Drawer = createDrawerNavigator();
 
