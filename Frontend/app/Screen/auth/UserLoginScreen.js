@@ -137,10 +137,16 @@ const UserLoginScreen = () => {
               
           </View>
 
+              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('AutoStack')}}>
+                 <Text style={{fontWeight:'bold'}}>Prueba</Text>
+              </TouchableWithoutFeedback> 
+      
         </View>
       </View>
       </ScrollView>
     </SafeAreaView>
+
+   
   )
 }
 export default UserLoginScreen
