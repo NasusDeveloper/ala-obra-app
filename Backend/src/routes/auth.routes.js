@@ -6,5 +6,5 @@ import * as verifySignup from "../middlewares/verifysignup.js"
 
 router.post("/signup", verifySignup.checkRolesExisted , authCtrl.signup)
 router.post("/signin", authCtrl.signin)
-
+router.post("/registro", authCtrl.registro)
 export default router

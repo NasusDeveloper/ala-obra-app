@@ -1,111 +1,101 @@
-import React from "react";
-import { View, Text, SafeAreaView, Keyboard, ToastAndroid } from "react-native";
-import { useState } from "react";
-import { ScrollView, TextInput, } from "react-native-gesture-handler";
-import { styles, toastConfig } from "../../../style";
-import { Button } from "react-native";
-import { Toast } from "react-native-toast-message/lib/src/Toast";
-import Checkbox from "expo-checkbox";
-import { useNavigation } from "@react-navigation/native";
-import { TouchableWithoutFeedback } from "react-native";
+import { View, Text, SafeAreaView, ToastAndroid } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { Toast } from "react-native-toast-message/lib/src/Toast";
+import { ScrollView, TextInput, Button } from "react-native";
+import { useNavigation } from "@react-navigation/native"
+import { TouchableWithoutFeedback } from "react-native";
+import * as DocumentPicker from "expo-document-picker";
+import { styles, toastConfig } from "../../../style";
+import React, { useState } from "react";
+import Checkbox from "expo-checkbox";
 import axios from "axios";
 
+import UserLoginScreen from "./UserLoginScreen";
 
 const RegisterTrabajadorScreen = () => {
-  const [name, setName] = useState("")
-  const [rut, setRut] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [password_confirmation, setPassword_confirmation] = useState("")
-  const [direcction, setDirecction] = useState("")
-  const [roles, setRoles] = useState("Trabajador")
-  const [fotos, setFotos] = useState([])
-  const [tc, setTc] = useState(false)
+  const navigation = useNavigation()
+  const [name, setName] = useState("");
+  const [rut, setRut] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password_confirmation, setPassword_confirmation] = useState("");
+  const [direcction, setDirecction] = useState("");
+  const [roles, setRoles] = useState("Trabajador");
+  const [tc, setTc] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(null);
 
   const clearTextInput = () => {
-    setUserName("")
-    setRut("")
-    setEmail("")
-    setPassword("")
-    setPassword_confirmation("")
-    setDirecction("")
-    setRoles("Trabajador")
-    setTc(false)
-  }
-
-  const handleImageUpload = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      console.log("Permission not granted!");
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-      allowsMultipleSelection: true,
-      maxNumberOfFiles: 5 - fotos.length,
-    });
-
-    if (!result.cancelled) {
-      setFotos([...fotos, result.uri]);
-    }
+    setName("");
+    setRut("");
+    setEmail("");
+    setPassword("");
+    setPassword_confirmation("");
+    setDirecction("");
+    setRoles("Trabajador");
+    setTc(false);
+    setSelectedDocument(null);
   };
-
-  const navigation = useNavigation()
-
+  
   const handleFormSubmit = async () => {
-
-    if (name && rut &&email && password && password_confirmation && direcction && fotos && tc) {
-
-      if(password === password_confirmation) {
-
+    if (
+      name &&
+      rut &&
+      email &&
+      password &&
+      password_confirmation &&
+      direcction &&
+      tc
+    ) {
+      if (password === password_confirmation) {
         const formData = {
-          username: 
-          name,
+          username: name,
           rut,
           email,
           password,
-          password_confirmation: password_confirmation,
-          direcction: direcction,
+          password_confirmation,
+          direcction,
           roles: "Trabajador",
-          fotos,
-          tc
-        }
-        //Coneccion a axios
+          tc,
+          document: selectedDocument,
+        };
+
         axios
-          .post("http://192.168.100.171:8000/api/auth/signup", formData)
-          .then(Response => {
-            console.log(Response.data)
-            Toast.show("Registro exitoso", ToastAndroid.SHORT)
-            clearTextInput()
+          .post("http://192.168.100.171:8000/api/auth/registro", formData)
+          .then((response) => {
+            console.log(response.data);
+            ToastAndroid.show("Registro exitoso", ToastAndroid.SHORT);
+            clearTextInput();
           })
+          .catch((error) => {
+            console.log(error);
+            ToastAndroid.show("Error en la solicitud", ToastAndroid.SHORT);
+          });
+      } else {
+        console.log("Las contraseñas no coinciden");
+        ToastAndroid.show("Las contraseñas no coinciden", ToastAndroid.SHORT);
+      }
+    } else {
+      console.log("Debe rellenar todos los campos");
+      ToastAndroid.show(
+        "Debe rellenar todos los campos",
+        ToastAndroid.SHORT
+      );
+    }
+  };
 
-          .catch(error => {
-            console.log(error)
-            ToastAndroid.show("Error en la solicitud", ToastAndroid.SHORT)
-          })
+  const handleDocumentSelection = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/pdf",
+      });
 
-} else {console.log("Las contraseñas no coinciden")
-    Toast.show({
-      type: 'warning',
-      position: 'top',
-      topOffset: 0,
-      text1: "Las contraseñas no coinciden"
-      })
-  }
-} else {console.log("Debe rellenar todos los campos")
-    Toast.show({
-      type: 'warning',
-      position: 'top',
-      topOffset: 0,
-      text1: "Debe rellenar todos los campos"
-    })
-  }
-}
-
+      if (!result.cancelled) {
+        setSelectedDocument(result.uri);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
 
     <SafeAreaView>
@@ -118,7 +108,7 @@ const RegisterTrabajadorScreen = () => {
 
           <View style={[styles.inputWithLabel, { marginBottom: 10, marginTop: 30 }]}>
 
-          <View style={{ alignSelf: 'center', marginBottom: 10 }}>
+            <View style={{ alignSelf: 'center', marginBottom: 10 }}>
 
               <MaterialIcons name='construction' color='#E8C64A' size={100} />
 
@@ -155,53 +145,46 @@ const RegisterTrabajadorScreen = () => {
 
             </View>
 
-            <View style={[styles.inputWithLabel ,{ marginBottom: 10 }]}>
+            <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
 
               <Text style={styles.labelText}>Confirma la Contraseña </Text>
 
               <TextInput style={styles.input} Value={password_confirmation} placeholder="Ingresa tu Contraseña" onChangeText={setPassword_confirmation} onPress={console.log(password_confirmation)} secureTextEntry={true}></TextInput>
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 15,
+                  paddingHorizontal: 10,
+                  marginTop: 10
+                }}>
+                Certificado de antecedentes:
+              </Text>
+              <View style={{ marginHorizontal: 40, padding: 10 }}>
+                <Button title="Seleccionar Documento" onPress={handleDocumentSelection} color='#8200d6' />
+              </View>
+
+              <View style={{ flex: 1, flexDirection: 'row', marginTop: 10 }}>
+                <Checkbox value={tc} onValueChange={setTc} color={tc ? '#4630EB' : undefined} />
+                <Text style={styles.labelText}>He leído y acepto los términos y condiciones </Text>
+              </View>
+
+              <View style={{padding:10}}>
+                <Button title="Aceptar" onPress={handleFormSubmit} color='#8200d6' />
+              </View>
 
             </View>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
 
-            <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
-
-              <Text style={styles.labelText}>Direccion: </Text>
-
-              <TextInput style={styles.input} Value={direcction} placeholder="Ingresa tu Direccion" onChangeText={setDirecction} onPress={console.log(direcction)} KeyboardType='roles'></TextInput>
-
-            </View>
-
-            <View style={{ flex: 1, flexDirection: 'row' , marginTop: 10}}>
-
-              <Checkbox value={tc} onValueChange={setTc} color={tc ? '#4630EB' : undefined} />
-
-              <Text style={styles.labelText}>He leído y acepto los términos y condiciones </Text>
-
-            </View>
-
-            <View style={{ width: 200, alignSelf: 'center', margin: 20 }}>
-
-              <Button title='Aceptar' onPress={handleFormSubmit} color='purple' />
-
-            </View>
-
-            <View style={{ alignItems: 'flex-end' }}>
-
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('UserLoginScreen')}}>
-
-                <Text style={{ fontWeight:'bold'}}>Ya se ha registrado? inicie sesion</Text>
-
+              <TouchableWithoutFeedback onPress={() => { navigation.navigate("UserLoginScreen") }}>
+                <Text style={{ fontWeight: 'bold', }}>Ya se ha registrado? inicie sesion</Text>
               </TouchableWithoutFeedback>
 
             </View>
-
           </View>
-
         </View>
-
       </ScrollView>
-
     </SafeAreaView>
-  )
-}
-export default RegisterTrabajadorScreen
+  );
+};
+
+export default RegisterTrabajadorScreen;

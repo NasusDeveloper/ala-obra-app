@@ -4,7 +4,7 @@ import { useState } from "react"
 
 import { TouchableWithoutFeedback } from "react-native"
 
-import { View, Text, SafeAreaView, Keyboard } from "react-native"
+import { View, Text, SafeAreaView, ToastAndroid } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler"
 
 import { Button } from "react-native"
@@ -58,21 +58,16 @@ const UserLoginScreen = () => {
 
       } catch (error) {
         console.log("Error al iniciar sesión:", error.message)
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          topOffset: 0,
-          text1: "Error al iniciar sesión"
-        })
+        ToastAndroid.show(
+          "Error al iniciar sesión",
+          ToastAndroid.SHORT)
       }
     } else {
-      console.log("Debe rellenar todos los campos")
-      Toast.show({
-        type: 'warning',
-        position: 'top',
-        topOffset: 0,
-        text1: "Debe rellenar todos los campos"
-      })
+      console.log("Debe rellenar todos los campos");
+      ToastAndroid.show(
+        "Debe rellenar todos los campos",
+        ToastAndroid.SHORT
+      )
     }
   }
 
@@ -109,7 +104,7 @@ const UserLoginScreen = () => {
             </View>
 
           <View style={{ width: 200, alignSelf: 'center', margin: 20 }}>
-            <Button title='Entrar' onPress={handleFormSubmit} color='purple' />
+            <Button title='Entrar' onPress={handleFormSubmit} color='#8200d6' />
           </View>
 
           <View style={{flexDirection: 'row'}}>
@@ -137,10 +132,6 @@ const UserLoginScreen = () => {
               
           </View>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('AutoStack')}}>
-                 <Text style={{fontWeight:'bold'}}>Prueba</Text>
-              </TouchableWithoutFeedback> 
-      
         </View>
       </View>
       </ScrollView>

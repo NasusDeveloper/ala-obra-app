@@ -32,4 +32,4 @@ const solicitudSchema = new Schema({
     timestamps: true
 })
 
-export default solicitudSchema ("Solicitud", Schema)
+export default model ("solicitud", solicitudSchema)
