@@ -12,6 +12,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import axios from "axios";
 
 
+
 const RegisterScreen = () => {
   const [name, setName] = useState("")
   const [rut, setRut] = useState("")
@@ -21,6 +22,26 @@ const RegisterScreen = () => {
   const [direcction, setDirecction] = useState("")
   const [roles, setRoles] = useState("Cliente")
   const [tc, setTc] = useState(false)
+  const [subject, setSubject] = useState("Registrado con éxito")
+  const [message, setMessage] = useState("Bienvenido "+name+", Has sido registrado con éxito. Tu mail de inicio de sesión es "+email)
+
+  const sendEmail = () => {
+    const mailOptions = {
+      from: "alaobrateam@gmail.com", //  dirección de correo electrónico
+      to: email,
+      subject: subject,
+      text: message,
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error al enviar el correo electrónico:", error);
+      } else {
+        console.log("Correo electrónico enviado:", info.response);
+      }
+    });
+  };
+
 
   const clearTextInput = () => {
     setUserName("")
@@ -159,7 +180,10 @@ const RegisterScreen = () => {
 
             <View style={{ width: 200, alignSelf: 'center', margin: 20 }}>
 
-              <Button title='Aceptar' onPress={handleFormSubmit} color='purple' />
+              <Button title='Aceptar' onPress={() => {
+                   sendEmail();
+                   handleFormSubmit();
+                   }}  color='purple' />
 
             </View>
 
