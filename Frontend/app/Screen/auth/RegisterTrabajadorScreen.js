@@ -52,7 +52,7 @@ const RegisterTrabajadorScreen = () => {
         };
 
         axios
-          .post("http://192.168.100.171:8000/api/auth/signup", formData)
+          .post("http://192.168.100.171:8000/api/auth/registro", formData)
           .then((response) => {
             console.log(response.data);
             ToastAndroid.show("Registro exitoso", ToastAndroid.SHORT);

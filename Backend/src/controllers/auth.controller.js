@@ -57,3 +57,42 @@ export const signin = async (req, res) => {
     }
     
 }
+
+export const registro = async (req, res) => {
+    try {
+      // Obtener los datos del formulario de registro
+      const { name, rut, email, password, direccion } = req.body;
+      // Obtener la ruta del archivo subido
+      const documentoPath = req.file.path;
+  
+      // Crear una instancia del modelo Trabajador
+      const trabajador = new Trabajador({
+        name,
+        rut,
+        email,
+        password: await users.encryptPassword(password),
+        direccion,
+        documentoPath
+      });
+  
+      // Guardar el trabajador en la base de datos
+     const savedTrabajador = await trabajador.save();
+  
+     const token = jwt.sign({id: savedTrabajador._id}, config.SECRET, {
+      expiresIn: 86400 //24 horas
+  })
+  
+  res.status(200).json({token})
+  
+      // Ejemplo de respuesta
+      const response = {
+        message: 'Registro exitoso',
+        trabajador
+      };
+  
+      res.json(response);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error en la solicitud' });
+    }
+  };
