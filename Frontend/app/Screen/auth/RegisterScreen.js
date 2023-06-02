@@ -159,16 +159,14 @@ const RegisterScreen = () => {
 
             <View style={{ width: 200, alignSelf: 'center', margin: 20 }}>
 
-              <Button title='Aceptar' onPress={handleFormSubmit} color='purple' />
+              <Button title='Aceptar' onPress={handleFormSubmit} color='#8200d6' />
 
             </View>
 
-            <View style={{ alignItems: 'flex-end' }}>
+            <View style={{flex:1, flexDirection: 'row' }}>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('UserLogin')}}>
-
-                <Text style={{ fontWeight:'bold'}}>Ya se ha registrado? inicie sesion</Text>
-
+            <TouchableWithoutFeedback onPress={() => { navigation.navigate("UserLoginScreen") }}>
+                <Text style={{ fontWeight: 'bold', }}>Ya se ha registrado? inicie sesion</Text>
               </TouchableWithoutFeedback>
 
             </View>
