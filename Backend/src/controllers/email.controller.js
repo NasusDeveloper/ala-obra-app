@@ -1,4 +1,4 @@
-const expressAsyncHandler = require("express-async-handler");
+/*const expressAsyncHandler = require("express-async-handler");
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
 dotenv.config();
@@ -33,4 +33,4 @@ const sendEmail = expressAsyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { sendEmail };
+module.exports = { sendEmail };*/

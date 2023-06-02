@@ -10,11 +10,10 @@ import React, { useState } from "react";
 import Checkbox from "expo-checkbox";
 import axios from "axios";
 
-import UserLoginScreen from "./UserLoginScreen";
 
 const RegisterTrabajadorScreen = () => {
   const navigation = useNavigation()
-  const [name, setName] = useState("");
+  const [nametrabajador, setName] = useState("");
   const [rut, setRut] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,7 +37,7 @@ const RegisterTrabajadorScreen = () => {
   
   const handleFormSubmit = async () => {
     if (
-      name &&
+      nametrabajador &&
       rut &&
       email &&
       password &&
@@ -48,7 +47,7 @@ const RegisterTrabajadorScreen = () => {
     ) {
       if (password === password_confirmation) {
         const formData = {
-          username: name,
+          nametrabajador: nametrabajador,
           rut,
           email,
           password,
@@ -60,7 +59,7 @@ const RegisterTrabajadorScreen = () => {
         };
 
         axios
-          .post("http://192.168.100.171:8000/api/auth/registro", formData)
+          .post("http://10.42.16.156:8000/api/auth/signupTrabajador", formData)
           .then((response) => {
             console.log(response.data);
             ToastAndroid.show("Registro exitoso", ToastAndroid.SHORT);
@@ -70,19 +69,13 @@ const RegisterTrabajadorScreen = () => {
             console.log(error);
             ToastAndroid.show("Error en la solicitud", ToastAndroid.SHORT);
           });
-      } else {
-        console.log("Las contraseñas no coinciden");
-        ToastAndroid.show("Las contraseñas no coinciden", ToastAndroid.SHORT);
-      }
-    } else {
-      console.log("Debe rellenar todos los campos");
-      ToastAndroid.show(
-        "Debe rellenar todos los campos",
-        ToastAndroid.SHORT
-      );
-    }
-  };
-
+} else {console.log("Las contraseñas no coinciden")
+ToastAndroid.show("Las contraseñas no coinciden", ToastAndroid.SHORT);
+  }
+} else {console.log("Debe rellenar todos los campos")
+ToastAndroid.show("Debe rellenar todos los campos", ToastAndroid.SHORT);
+  }
+}
   const handleDocumentSelection = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -118,7 +111,7 @@ const RegisterTrabajadorScreen = () => {
 
               <Text style={styles.labelText}>Nombre: </Text>
 
-              <TextInput style={styles.input} Value={name} onChangeText={setName} placeholder="Escribe tu Nombre" onPress={console.log(name)} />
+              <TextInput style={styles.input} Value={nametrabajador} onChangeText={setName} placeholder="Escribe tu Nombre" onPress={console.log(nametrabajador)} />
 
             </View>
 
@@ -161,6 +154,7 @@ const RegisterTrabajadorScreen = () => {
               </Text>
               <View style={{ marginHorizontal: 40, padding: 10 }}>
                 <Button title="Seleccionar Documento" onPress={handleDocumentSelection} color='#8200d6' />
+                {selectedDocument && (<Text>Documento seleccionado: {selectedDocument}</Text>)}
               </View>
 
               <View style={{ flex: 1, flexDirection: 'row', marginTop: 10 }}>

@@ -1,7 +1,8 @@
-import mongoose from 'mongoose';
+import { Schema, model } from "mongoose"
+import bcrypt from "bcryptjs"
 
-const trabajadorSchema = new mongoose.Schema({
-  name: {
+const trabajadorSchema = new Schema({
+  nametrabajador: {
     type: String,
     required: true
   },
@@ -21,11 +22,26 @@ const trabajadorSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  roles: [{
+    ref: "Role",
+    type: Schema.Types.ObjectId
+}],
   documentoPath: {
     type: String
   }
-});
+},
+{
+  timestamps: true,
+  versionKey: false
+})
 
-const Trabajador = mongoose.model('Trabajador', trabajadorSchema);
+//Encriptar la password y compararla
+trabajadorSchema.statics.encryptPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10)
+  return await bcrypt.hash(password, salt)
+}
+trabajadorSchema.statics.comparePassword = async (password, receivedPassword) => {
+  return await bcrypt.compare(password, receivedPassword)
+}
 
-export default Trabajador
+export default model("trabajador", trabajadorSchema)

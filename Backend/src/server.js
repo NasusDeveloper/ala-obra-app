@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes)
 app.use("/api/users", usersRoutes)
 app.use("/api/solicitud", solicitudRoutes)
-app.use("/api/trabajador", trabajadorRoutes)
+app.use("/api/signupTrabajador", trabajadorRoutes)
 app.use(errorHandler)
 
 export default app
