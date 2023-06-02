@@ -16,7 +16,7 @@ const TabScreen = () => {
     return (
     <Drawer.Navigator screenOptions={{headerStyle: {backgroundColor:'purple'}, headerTintColor:'white', drawerStyle:{backgroundColor:'#F0EDED'}}}>
 
-            <Drawer.Screen name = "Home" component = {HomeScreen} options = {{headerTitle:'ALaObra', drawerActiveTintColor:'black', headerRight: () =>         
+    <Drawer.Screen name = "Home" component = {HomeScreen} options = {{headerTitle:'ALaObra', drawerActiveTintColor:'black', headerRight: () =>         
             
             //Cliqueable de iniciar sesion
             <TouchableWithoutFeedback onPress = { () => navigation.navigate('UserLogin')}>

@@ -109,7 +109,7 @@ const UserLoginScreen = () => {
             </View>
 
           <View style={{ width: 200, alignSelf: 'center', margin: 20 }}>
-            <Button title='Entrar' onPress={handleFormSubmit} color='purple' />
+            <Button title='Entrar' onPress={handleFormSubmit} color='#8200d6' />
           </View>
 
           <View style={{flexDirection: 'row'}}>
@@ -137,7 +137,7 @@ const UserLoginScreen = () => {
               
           </View>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('AutoStack')}}>
+              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('HomeScreen')}}>
                  <Text style={{fontWeight:'bold'}}>Prueba</Text>
               </TouchableWithoutFeedback> 
       

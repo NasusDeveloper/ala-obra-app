@@ -11,15 +11,18 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const CustomDrawer = (props) => {
   return (
     <View style={{flex:1}} >
-    <DrawerContentScrollView {...props} contentContainerStyle={{backgroundColor:'purple' }}>
-    <ImageBackground style={{padding: 20}} source={{ uri: "https://github.com/itzpradip/react-navigation-v6-mix/blob/master/src/assets/images/menu-bg.jpeg" }}/>
+    <DrawerContentScrollView {...props} 
+    contentContainerStyle={{backgroundColor:'#8200d6' }}>
+    <ImageBackground source={require("../../././assets/images/menu-bg.jpeg")}
+    style={{padding: 20}}>
         
-    <Image source={{ uri: "https://github.com/itzpradip/react-navigation-v6-mix/blob/master/src/assets/images/user-profile.jpg"}} 
+    <Image source={require('../../././assets/images/user-profile.png')} 
     style={{height: 80, width:80, borderRadius: 40, marginBottom: 10}}/>
       
       <View>
@@ -27,11 +30,13 @@ const CustomDrawer = (props) => {
         <Text style={{ color:"#fff"}}>Trabajador o Cliente</Text>
       </View>
 
-    <ImageBackground/>
+      </ImageBackground>
     <View style={{flex:1, backgroundColor:"#fff", paddingTop:10 }}>
     <DrawerItemList{...props} />
     </View>
+    
     </DrawerContentScrollView>
+    
     <View style={{padding: 20, borderTopWidth: 1, borderTopColor: '#ccc'}}>
         <TouchableOpacity onPress={() => {}} style={{paddingVertical: 15}}>
         </TouchableOpacity>

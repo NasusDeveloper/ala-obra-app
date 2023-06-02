@@ -9,8 +9,10 @@ import Checkbox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableWithoutFeedback } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import axios from "axios";
+//no toma el import
+import DocumentPicker from "react-native-document-picker"
 
+import axios from "axios";
 
 const RegisterTrabajadorScreen = () => {
   const [name, setName] = useState("")
@@ -33,7 +35,45 @@ const RegisterTrabajadorScreen = () => {
     setRoles("Trabajador")
     setTc(false)
   }
-
+  /*
+  function App() {
+    const selectDoc = async () => {
+      try {
+        // const doc = await DocumentPicker.pick({
+        //   type: [DocumentPicker.types.pdf],
+        //   allowMultiSelection: true
+        // });
+        // const doc = await DocumentPicker.pickSingle()
+        const doc = await DocumentPicker.pickMultiple({
+          type: [DocumentPicker.types.pdf, DocumentPicker.types.images]
+        })
+        console.log(doc)
+      } catch(err) {
+        if(DocumentPicker.isCancel(err)) 
+          console.log("User cancelled the upload", err);
+        else 
+          console.log(err)
+      }
+    }
+  
+    return (
+      <View>
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 28,
+            textAlign: 'center',
+            marginVertical: 40,
+          }}>
+          Document Picker
+        </Text>
+        <View style={{marginHorizontal: 40}}>
+          <Button title="Select Document" onPress={selectDoc} />
+        </View>
+      </View>
+    );
+  }
+  */
   const handleImageUpload = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -58,13 +98,13 @@ const RegisterTrabajadorScreen = () => {
 
   const handleFormSubmit = async () => {
 
-    if (name && rut &&email && password && password_confirmation && direcction && fotos && tc) {
+    if (name && rut && email && password && password_confirmation && direcction && fotos && tc) {
 
-      if(password === password_confirmation) {
+      if (password === password_confirmation) {
 
         const formData = {
-          username: 
-          name,
+          username:
+            name,
           rut,
           email,
           password,
@@ -88,23 +128,25 @@ const RegisterTrabajadorScreen = () => {
             ToastAndroid.show("Error en la solicitud", ToastAndroid.SHORT)
           })
 
-} else {console.log("Las contraseñas no coinciden")
-    Toast.show({
-      type: 'warning',
-      position: 'top',
-      topOffset: 0,
-      text1: "Las contraseñas no coinciden"
+      } else {
+        console.log("Las contraseñas no coinciden")
+        Toast.show({
+          type: 'warning',
+          position: 'top',
+          topOffset: 0,
+          text1: "Las contraseñas no coinciden"
+        })
+      }
+    } else {
+      console.log("Debe rellenar todos los campos")
+      Toast.show({
+        type: 'warning',
+        position: 'top',
+        topOffset: 0,
+        text1: "Debe rellenar todos los campos"
       })
+    }
   }
-} else {console.log("Debe rellenar todos los campos")
-    Toast.show({
-      type: 'warning',
-      position: 'top',
-      topOffset: 0,
-      text1: "Debe rellenar todos los campos"
-    })
-  }
-}
 
   return (
 
@@ -118,7 +160,7 @@ const RegisterTrabajadorScreen = () => {
 
           <View style={[styles.inputWithLabel, { marginBottom: 10, marginTop: 30 }]}>
 
-          <View style={{ alignSelf: 'center', marginBottom: 10 }}>
+            <View style={{ alignSelf: 'center', marginBottom: 10 }}>
 
               <MaterialIcons name='construction' color='#E8C64A' size={100} />
 
@@ -155,7 +197,7 @@ const RegisterTrabajadorScreen = () => {
 
             </View>
 
-            <View style={[styles.inputWithLabel ,{ marginBottom: 10 }]}>
+            <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
 
               <Text style={styles.labelText}>Confirma la Contraseña </Text>
 
@@ -170,8 +212,20 @@ const RegisterTrabajadorScreen = () => {
               <TextInput style={styles.input} Value={direcction} placeholder="Ingresa tu Direccion" onChangeText={setDirecction} onPress={console.log(direcction)} KeyboardType='roles'></TextInput>
 
             </View>
+          </View>
+          <View>
+            <Text
+              style={{
+                paddingHorizontal: 9,
+                fontSize: 15,
+              }}>
+              Certificado de antecedentes:
+            </Text>
+            <View style={{ marginHorizontal: 40, marginTop:5}}>
+              <Button title="Select Document" color='#8200d6'/>
+            </View>
 
-            <View style={{ flex: 1, flexDirection: 'row' , marginTop: 10}}>
+            <View style={{ flex: 1, flexDirection: 'row', marginTop: 10 }}>
 
               <Checkbox value={tc} onValueChange={setTc} color={tc ? '#4630EB' : undefined} />
 
@@ -181,15 +235,15 @@ const RegisterTrabajadorScreen = () => {
 
             <View style={{ width: 200, alignSelf: 'center', margin: 20 }}>
 
-              <Button title='Aceptar' onPress={handleFormSubmit} color='purple' />
+              <Button title='Aceptar' onPress={handleFormSubmit} color='#8200d6' />
+
 
             </View>
+            <View style={{ flex:1 , flexDirection: 'row' }}>
 
-            <View style={{ alignItems: 'flex-end' }}>
+              <TouchableWithoutFeedback onPress={() => { navigation.navigate('UserLoginScreen') }}>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('UserLoginScreen')}}>
-
-                <Text style={{ fontWeight:'bold'}}>Ya se ha registrado? inicie sesion</Text>
+                <Text style={{ fontWeight: 'bold', }}>Ya se ha registrado? inicie sesion</Text>
 
               </TouchableWithoutFeedback>
 

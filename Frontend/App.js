@@ -9,7 +9,6 @@ import RegisterScreen from './app/Screen/auth/RegisterScreen';
 import SendPasswordResetEmailScreen from './app/Screen/auth/SendPasswordResetEmailScreen';
 import HomeScreen from './app/Screen/HomeScreen';
 import RegisterTrabajadorScreen from './app/Screen/auth/RegisterTrabajadorScreen';
-import AutoStack from './app/Screen/auth/AutoStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +35,7 @@ export default function App() {
       <StatusBar style="auto" />
       <Stack.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: 'purple' },
+          headerStyle: { backgroundColor: '#8200d6' },
           headerTintColor: 'white',
         }}
       >
@@ -63,12 +62,6 @@ export default function App() {
         <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
-          options={{ headerShown: false }}
-        />
-
-<Stack.Screen
-          name="AutoStack"
-          component={AutoStack}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
