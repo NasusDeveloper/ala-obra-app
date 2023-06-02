@@ -46,4 +46,3 @@ const AutoStack = () =>{
 )}
 
 export default AutoStack
-
