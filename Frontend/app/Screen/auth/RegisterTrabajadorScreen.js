@@ -1,11 +1,19 @@
-import React, { useState } from "react";
 import { View, Text, SafeAreaView, ToastAndroid } from "react-native";
-import { TextInput, Button } from "react-native";
-import Checkbox from "expo-checkbox";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { Toast } from "react-native-toast-message/lib/src/Toast";
+import { ScrollView, TextInput, Button } from "react-native";
+import { useNavigation } from "@react-navigation/native"
+import { TouchableWithoutFeedback } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
+import { styles, toastConfig } from "../../../style";
+import React, { useState } from "react";
+import Checkbox from "expo-checkbox";
 import axios from "axios";
 
+import UserLoginScreen from "./UserLoginScreen";
+
 const RegisterTrabajadorScreen = () => {
+  const navigation = useNavigation()
   const [name, setName] = useState("");
   const [rut, setRut] = useState("");
   const [email, setEmail] = useState("");
@@ -27,7 +35,7 @@ const RegisterTrabajadorScreen = () => {
     setTc(false);
     setSelectedDocument(null);
   };
-
+  
   const handleFormSubmit = async () => {
     if (
       name &&
@@ -88,48 +96,93 @@ const RegisterTrabajadorScreen = () => {
       console.log(error);
     }
   };
-
   return (
+
     <SafeAreaView>
-      <View>
-        <TextInput
-          placeholder="Nombre"
-          value={name}
-          onChangeText={setName}
-        />
-        <TextInput placeholder="Rut" value={rut} onChangeText={setRut} />
-        <TextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <TextInput
-          placeholder="Contraseña"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <TextInput
-          placeholder="Confirmar Contraseña"
-          value={password_confirmation}
-          onChangeText={setPassword_confirmation}
-          secureTextEntry
-        />
-        <TextInput
-          placeholder="Dirección"
-          value={direcction}
-          onChangeText={setDirecction}
-        />
-        <Button title="Seleccionar Documento" onPress={handleDocumentSelection} />
-        {selectedDocument && (
-          <Text>Documento seleccionado: {selectedDocument}</Text>
-        )}
-        <View>
-          <Checkbox value={tc} onValueChange={setTc} />
-          <Text>Acepto los términos y condiciones</Text>
+
+      <Toast config={toastConfig} />
+
+      <ScrollView keyboardShouldPersistTaps='handled'>
+
+        <View style={{ marginHorizontal: 30 }}>
+
+          <View style={[styles.inputWithLabel, { marginBottom: 10, marginTop: 30 }]}>
+
+            <View style={{ alignSelf: 'center', marginBottom: 10 }}>
+
+              <MaterialIcons name='construction' color='#E8C64A' size={100} />
+
+            </View>
+
+            <View style={styles.inputWithLabel}>
+
+              <Text style={styles.labelText}>Nombre: </Text>
+
+              <TextInput style={styles.input} Value={name} onChangeText={setName} placeholder="Escribe tu Nombre" onPress={console.log(name)} />
+
+            </View>
+
+            <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
+
+              <Text style={styles.labelText}>Rut: </Text>
+
+              <TextInput style={styles.input} Value={rut} placeholder="Ingresa tu rut" onChangeText={setRut} onPress={console.log(rut)} KeyboardType='Rut'></TextInput>
+
+            </View>
+
+            <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
+
+              <Text style={styles.labelText}>Email: </Text>
+
+              <TextInput style={styles.input} Value={email} placeholder="Ingresa tu Correo electronico" onChangeText={setEmail} onPress={console.log(email)} KeyboardType='email-address'></TextInput>
+            </View>
+
+            <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
+
+              <Text style={styles.labelText}>Contraseña: </Text>
+
+              <TextInput style={styles.input} Value={password} placeholder="Ingresa tu Contraseña" onChangeText={setPassword} onPress={console.log(password)} secureTextEntry={true}></TextInput>
+
+            </View>
+
+            <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
+
+              <Text style={styles.labelText}>Confirma la Contraseña </Text>
+
+              <TextInput style={styles.input} Value={password_confirmation} placeholder="Ingresa tu Contraseña" onChangeText={setPassword_confirmation} onPress={console.log(password_confirmation)} secureTextEntry={true}></TextInput>
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 15,
+                  paddingHorizontal: 10,
+                  marginTop: 10
+                }}>
+                Certificado de antecedentes:
+              </Text>
+              <View style={{ marginHorizontal: 40, padding: 10 }}>
+                <Button title="Seleccionar Documento" onPress={handleDocumentSelection} color='#8200d6' />
+              </View>
+
+              <View style={{ flex: 1, flexDirection: 'row', marginTop: 10 }}>
+                <Checkbox value={tc} onValueChange={setTc} color={tc ? '#4630EB' : undefined} />
+                <Text style={styles.labelText}>He leído y acepto los términos y condiciones </Text>
+              </View>
+
+              <View style={{padding:10}}>
+                <Button title="Aceptar" onPress={handleFormSubmit} color='#8200d6' />
+              </View>
+
+            </View>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+
+              <TouchableWithoutFeedback onPress={() => { navigation.navigate("UserLoginScreen") }}>
+                <Text style={{ fontWeight: 'bold', }}>Ya se ha registrado? inicie sesion</Text>
+              </TouchableWithoutFeedback>
+
+            </View>
+          </View>
         </View>
-        <Button title="Aceptar" onPress={handleFormSubmit} />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
