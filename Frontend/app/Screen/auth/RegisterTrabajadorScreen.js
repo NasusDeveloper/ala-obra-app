@@ -80,7 +80,6 @@ const RegisterTrabajadorScreen = () => {
         "Debe rellenar todos los campos",
         ToastAndroid.SHORT
       );
-      navigation.navigate("UserLoginScreen")
     }
   };
 

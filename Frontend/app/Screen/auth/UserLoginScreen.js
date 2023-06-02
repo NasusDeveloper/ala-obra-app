@@ -4,7 +4,7 @@ import { useState } from "react"
 
 import { TouchableWithoutFeedback } from "react-native"
 
-import { View, Text, SafeAreaView, Keyboard } from "react-native"
+import { View, Text, SafeAreaView, ToastAndroid } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler"
 
 import { Button } from "react-native"
@@ -58,21 +58,16 @@ const UserLoginScreen = () => {
 
       } catch (error) {
         console.log("Error al iniciar sesión:", error.message)
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          topOffset: 0,
-          text1: "Error al iniciar sesión"
-        })
+        ToastAndroid.show(
+          "Error al iniciar sesión",
+          ToastAndroid.SHORT)
       }
     } else {
-      console.log("Debe rellenar todos los campos")
-      Toast.show({
-        type: 'warning',
-        position: 'top',
-        topOffset: 0,
-        text1: "Debe rellenar todos los campos"
-      })
+      console.log("Debe rellenar todos los campos");
+      ToastAndroid.show(
+        "Debe rellenar todos los campos",
+        ToastAndroid.SHORT
+      )
     }
   }
 

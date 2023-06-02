@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, SafeAreaView, Keyboard, ToastAndroid } from "react-native";
+import { View, Text, SafeAreaView, ToastAndroid } from "react-native";
 import { useState } from "react";
 import { ScrollView, TextInput, } from "react-native-gesture-handler";
 import { styles, toastConfig } from "../../../style";
@@ -13,77 +13,75 @@ import axios from "axios";
 
 
 const RegisterScreen = () => {
-  const [name, setName] = useState("")
-  const [rut, setRut] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [password_confirmation, setPassword_confirmation] = useState("")
-  const [direcction, setDirecction] = useState("")
-  const [roles, setRoles] = useState("Cliente")
-  const [tc, setTc] = useState(false)
+  const navigation = useNavigation()
+  const [name, setName] = useState("");
+  const [rut, setRut] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password_confirmation, setPassword_confirmation] = useState("");
+  const [direcction, setDirecction] = useState("");
+  const [roles, setRoles] = useState("Trabajador");
+  const [tc, setTc] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(null);
 
   const clearTextInput = () => {
-    setUserName("")
-    setRut("")
-    setEmail("")
-    setPassword("")
-    setPassword_confirmation("")
-    setDirecction("")
-    setRoles("Cliente")
-    setTc(false)
-  }
-
-  const navigation = useNavigation()
-
-  const handleFormSubmit = () => {
-
-    if (name && rut &&email && password && password_confirmation && direcction && tc) {
-
-      if(password === password_confirmation) {
-
+    setName("");
+    setRut("");
+    setEmail("");
+    setPassword("");
+    setPassword_confirmation("");
+    setDirecction("");
+    setRoles("Trabajador");
+    setTc(false);
+    setSelectedDocument(null);
+  };
+  
+  const handleFormSubmit = async () => {
+    if (
+      name &&
+      rut &&
+      email &&
+      password &&
+      password_confirmation &&
+      direcction &&
+      tc
+    ) {
+      if (password === password_confirmation) {
         const formData = {
-          username: 
-          name,
+          username: name,
           rut,
           email,
           password,
-          password_confirmation: password_confirmation,
-          direcction: direcction,
+          password_confirmation,
+          direcction,
           roles: "Trabajador",
           tc,
-        }
-        //Coneccion a axios
+          document: selectedDocument,
+        };
+
         axios
           .post("http://192.168.100.171:8000/api/auth/signup", formData)
-          .then(Response => {
-            console.log(Response.data)
-            Toast.show("Registro exitoso", ToastAndroid.SHORT)
-            clearTextInput()
+          .then((response) => {
+            console.log(response.data);
+            ToastAndroid.show("Registro exitoso", ToastAndroid.SHORT);
+            clearTextInput();
           })
-
-          .catch(error => {
-            console.log(error)
-            ToastAndroid.show("Error en la solicitud", ToastAndroid.SHORT)
-          })
-
-} else {console.log("Las contraseñas no coinciden")
-    Toast.show({
-      type: 'warning',
-      position: 'top',
-      topOffset: 0,
-      text1: "Las contraseñas no coinciden"
-      })
-  }
-} else {console.log("Debe rellenar todos los campos")
-    Toast.show({
-      type: 'warning',
-      position: 'top',
-      topOffset: 0,
-      text1: "Debe rellenar todos los campos"
-    })
-  }
-}
-
+          .catch((error) => {
+            console.log(error);
+            ToastAndroid.show("Error en la solicitud", ToastAndroid.SHORT);
+          });
+      } else {
+        console.log("Las contraseñas no coinciden");
+        ToastAndroid.show("Las contraseñas no coinciden", ToastAndroid.SHORT);
+      }
+    } else {
+      console.log("Debe rellenar todos los campos");
+      ToastAndroid.show(
+        "Debe rellenar todos los campos",
+        ToastAndroid.SHORT
+      );
+    }
+  };
   return (
 
     <SafeAreaView>
@@ -152,22 +150,18 @@ const RegisterScreen = () => {
             <View style={{ flex: 1, flexDirection: 'row' , marginTop: 10}}>
 
               <Checkbox value={tc} onValueChange={setTc} color={tc ? '#4630EB' : undefined} />
-
               <Text style={styles.labelText}>He leído y acepto los términos y condiciones </Text>
-
             </View>
 
             <View style={{ width: 200, alignSelf: 'center', margin: 20 }}>
-
               <Button title='Aceptar' onPress={handleFormSubmit} color='#8200d6' />
-
             </View>
 
             <View style={{flex:1, flexDirection: 'row' }}>
 
             <TouchableWithoutFeedback onPress={() => { navigation.navigate("UserLoginScreen") }}>
                 <Text style={{ fontWeight: 'bold', }}>Ya se ha registrado? inicie sesion</Text>
-              </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
 
             </View>
 
