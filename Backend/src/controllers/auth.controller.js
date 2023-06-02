@@ -35,6 +35,38 @@ export const signup = async (req, res) => {
     })
 
     res.status(200).json({token})
+
+    
+        [email, setEmail] = email;
+        const [subject, setSubject] = "Registrado con éxito";
+        const [message, setMessage] = "Hola "+email+", has sido registrado con éxito. Bienvenido a ALaObra";
+      
+        const baseUrl = "http://localhost:8000";
+      
+        const sendEmail = async () => {
+          let dataSend = {
+            email: email,
+            subject: subject,
+            message: message,
+          };
+      
+          const res = await fetch(`${baseUrl}/email/sendEmail`, {
+            method: "POST",
+            body: JSON.stringify(dataSend),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          })
+            // HANDLING ERRORS
+            .then((res) => {
+              console.log(res);
+              if (res.status > 199 && res.status < 300) {
+                alert("Send Successfully !");
+              }
+            });
+        };  
+
 }
 export const signin = async (req, res) => {
     //Verificar el usuario
