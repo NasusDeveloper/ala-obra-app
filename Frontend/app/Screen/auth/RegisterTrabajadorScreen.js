@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { TouchableWithoutFeedback } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 //no toma el import
-import DocumentPicker from "react-native-document-picker"
+//import DocumentPicker from "react-native-document-picker"
 
 import axios from "axios";
 

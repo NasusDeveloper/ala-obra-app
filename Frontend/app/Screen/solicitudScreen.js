@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Image, TouchableOpacity, Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import axios from "axios";
+import axios from "axios"
 
 const FormularioSolicitud = () => {
-  const [nombre, setNombre] = useState("");
+  const [nameSolicitud, setNameSolicitud] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fotos, setFotos] = useState([]);
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
 
-  const handleNombreChange = (Text) => {
-    setNombre(Text);
+  const handleNameSolicitudChange = (Text) => {
+    setNameSolicitud(Text);
   };
 
   const handleDescripcionChange = (Text) => {
@@ -49,8 +49,8 @@ const FormularioSolicitud = () => {
   const handleFormSubmit = async () => {
     try {
       // Realizar la solicitud a través de Axios
-      const response = await axios.post("http://192.168.100.171:8000/api/auth/solicitudes", {
-        nombre,
+      const response = await axios.post("http://192.168.100.171:8000/api/auth/solicitud", {
+        nameSolicitud,
         descripcion,
         fotos,
         fechaInicio,
@@ -68,31 +68,36 @@ const FormularioSolicitud = () => {
     <View>
       <TextInput
         placeholder="Nombre (mínimo 10 caracteres)"
-        onChangeText={handleNombreChange}
-        value={nombre}
+        onChangeText={handleNameSolicitudChange}
+        value={nameSolicitud}
       />
+
       <TextInput
         placeholder="Descripción (máximo 100 caracteres)"
         onChangeText={handleDescripcionChange}
         value={descripcion}
         multiline
       />
+
       <Button title="Seleccionar Fotos" onPress={handleImageUpload} />
       <View>
         {fotos.map((foto, index) => (
           <Image key={index} source={{ uri: foto }} style={{ width: 200, height: 200 }} />
         ))}
       </View>
+
       <TextInput
         placeholder="Fecha de inicio"
         onChangeText={handleFechaInicioChange}
         value={fechaInicio}
       />
+
       <TextInput
         placeholder="Fecha de fin"
         onChangeText={handleFechaFinChange}
         value={fechaFin}
       />
+
       <TouchableOpacity onPress={handleFormSubmit}>
         <View>
           <Text>Enviar Solicitud</Text>

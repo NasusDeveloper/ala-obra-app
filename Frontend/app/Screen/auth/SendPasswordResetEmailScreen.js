@@ -66,7 +66,7 @@ const SendPasswordResetEmailScreen = () => {
           />
         </View>
         <View style={{width: 200, alignSelf: 'center', margin: 20 }}>
-          <Button title="Enviar" onPress={handleFormSubmit} color= 'purple' />
+          <Button title="Enviar" onPress={handleFormSubmit} color= '#8200d6' />
         </View>
       </View>
     </SafeAreaView>

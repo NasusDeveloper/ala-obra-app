@@ -32,7 +32,6 @@ const HomeScreen = () => {
     <Drawer.Screen name="Home" component={UserLoginScreen} options={{ drawerIcon: ({color}) =>( 
     <Ionicons name="home-outline" size={22} color={color} />
     )}}/>
-
     <Drawer.Screen name="Solicitudes" component={SolicitudScreen}  options={{ drawerIcon: ({color}) =>( 
     <Ionicons name="person-outline" size={22} color={color} />
     )}}/>
