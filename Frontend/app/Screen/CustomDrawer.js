@@ -11,11 +11,17 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 
-
+import { useNavigation } from '@react-navigation/core';
+import { TouchableWithoutFeedback } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+
+
 const CustomDrawer = (props) => {
+
+  const navigation = useNavigation()
   return (
+    
     <View style={{flex:1}} >
     <DrawerContentScrollView {...props} 
     contentContainerStyle={{backgroundColor:'#8200d6' }}>
@@ -26,7 +32,7 @@ const CustomDrawer = (props) => {
     style={{height: 80, width:80, borderRadius: 40, marginBottom: 10}}/>
       
       <View>
-        <Text style={{ color:"#fff", fontSize: 18, marginBottom:5}}>probando 123</Text>
+        <Text style={{ color:"#fff", fontSize: 18, marginBottom:5}}>Nombre</Text>
         <Text style={{ color:"#fff"}}>Trabajador o Cliente</Text>
       </View>
 
@@ -38,9 +44,7 @@ const CustomDrawer = (props) => {
     </DrawerContentScrollView>
     
     <View style={{padding: 20, borderTopWidth: 1, borderTopColor: '#ccc'}}>
-        <TouchableOpacity onPress={() => {}} style={{paddingVertical: 15}}>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} style={{paddingVertical: 15}}>
+        <TouchableWithoutFeedback onPress={() => {navigation.navigate('UserLoginScreen')}} style={{paddingVertical: 15}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Ionicons name="exit-outline" size={22} />
             <Text
@@ -51,7 +55,7 @@ const CustomDrawer = (props) => {
               Sign Out
             </Text>
           </View>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       </View>
 
     </View>

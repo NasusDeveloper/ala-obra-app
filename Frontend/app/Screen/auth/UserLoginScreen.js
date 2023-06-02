@@ -137,10 +137,6 @@ const UserLoginScreen = () => {
               
           </View>
 
-              <TouchableWithoutFeedback onPress={()=>{navigation.navigate('HomeScreen')}}>
-                 <Text style={{fontWeight:'bold'}}>Prueba</Text>
-              </TouchableWithoutFeedback> 
-      
         </View>
       </View>
       </ScrollView>
