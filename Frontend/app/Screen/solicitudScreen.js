@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Image, TouchableOpacity, Text } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import { styles, toastConfig } from "../../style"
+import * as ImagePicker from "expo-image-picker"
 import axios from "axios"
 
 const FormularioSolicitud = () => {
@@ -65,46 +66,65 @@ const FormularioSolicitud = () => {
   };
 
   return (
-    <View>
+    <View style={{ marginHorizontal: 30 }}>
+      <View style={[styles.inputWithLabel, { marginBottom: 10, marginTop: 30 }]}>
+      <View style={styles.inputWithLabel}>
       <TextInput
+        style={styles.input}
         placeholder="Nombre (mínimo 10 caracteres)"
         onChangeText={handleNameSolicitudChange}
         value={nameSolicitud}
+        onPress={console.log(nameSolicitud)}
       />
+      </View>
 
+      <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
       <TextInput
+        style={styles.input}
         placeholder="Descripción (máximo 100 caracteres)"
         onChangeText={handleDescripcionChange}
         value={descripcion}
         multiline
+        onPress={console.log(descripcion)}
       />
+      </View>
 
-      <Button title="Seleccionar Fotos" onPress={handleImageUpload} />
+      <View style={{ width: 200, alignSelf: 'center', margin: 20}}>
+        <Button title="Seleccionar Fotos" onPress={handleImageUpload} color="#8200d6" />
+      </View>
+
       <View>
         {fotos.map((foto, index) => (
           <Image key={index} source={{ uri: foto }} style={{ width: 200, height: 200 }} />
         ))}
       </View>
 
+      <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
       <TextInput
+        style={styles.input}
         placeholder="Fecha de inicio"
         onChangeText={handleFechaInicioChange}
         value={fechaInicio}
+        onPress={console.log(fechaInicio)}
       />
+      </View>
 
+      <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
       <TextInput
+        style={styles.input}
         placeholder="Fecha de fin"
         onChangeText={handleFechaFinChange}
         value={fechaFin}
+        onPress={console.log(fechaFin)}
       />
+      </View>
 
-      <TouchableOpacity onPress={handleFormSubmit}>
-        <View>
-          <Text>Enviar Solicitud</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={{width: 200, alignSelf: "center", margin: 20}}>
+        <Button title="Aceptar" onPress={handleFormSubmit} color="#8200d6"/>
+      </View>
+      </View>
     </View>
-  );
-};
+  )
+}
 
 export default FormularioSolicitud;

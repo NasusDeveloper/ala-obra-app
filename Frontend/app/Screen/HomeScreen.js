@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator();
 const HomeScreen = () => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Hola soy un home sin nada :c</Text>
+      <Text>Homme cliente</Text>
     </View>
 )}
 
@@ -42,7 +42,7 @@ const DrawerNavigator = () => {
   <Ionicons name="person-outline" size={22} color={color} />
   )}}/>
   
-  </Drawer.Navigator>   
+    </Drawer.Navigator>   
   )
 }
   

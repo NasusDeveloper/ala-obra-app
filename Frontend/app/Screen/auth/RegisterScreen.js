@@ -46,7 +46,7 @@ const RegisterScreen = () => {
         }
         //Coneccion a axios
         axios
-          .post("http://10.42.16.156:8000/api/auth/signup", formData)
+          .post("http://192.168.100.171:8000/api/auth/signup", formData)
           .then(Response => {
             console.log(Response.data)
             Toast.show("Registro exitoso", ToastAndroid.SHORT)
