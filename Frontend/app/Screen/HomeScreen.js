@@ -35,12 +35,30 @@ const DrawerNavigator = () => {
   fontSize: 15,
   }}}>
 
+
   <Drawer.Screen name="Home" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="home-outline" size={22} color={color} />
   )}}/>
   <Drawer.Screen name="Solicitudes" component={SolicitudScreen}  options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="person-outline" size={22} color={color} />
   )}}/>
+    <Drawer.Screen name="Trabajando" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+  <Ionicons name="hammer" size={22} color={color} />
+  )}}/>  
+  <Drawer.Screen name="Métodos de pago" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+  <Ionicons name="card" size={22} color={color} />
+  )}}/>  
+  <Drawer.Screen name="Perfil" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+  <Ionicons name="person" size={22} color={color} />
+  )}}/>
+  <Drawer.Screen name="Configuración" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+  <Ionicons name="cog" size={22} color={color} />
+  )}}/>
+  <Drawer.Screen name="Soporte" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+  <Ionicons name="build" size={22} color={color} />
+  )}}/>
+
+  
   
     </Drawer.Navigator>   
   )
