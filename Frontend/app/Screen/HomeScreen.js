@@ -8,6 +8,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import CustomDrawer from "./CustomDrawer";
 import SolicitudScreen from './SolicitudScreen';
+import Trabajando from "./auth/Trabajando";
+import MetodoPago from "./auth/MetodoPago";
+import PerfilCliente from "./auth/PerfilCliente";
+import Configuracion from "./auth/Configuracion";
+import Soporte from "./auth/Soporte";
 
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator();
@@ -42,19 +47,19 @@ const DrawerNavigator = () => {
   <Drawer.Screen name="Solicitudes" component={SolicitudScreen}  options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="person-outline" size={22} color={color} />
   )}}/>
-    <Drawer.Screen name="Trabajando" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+    <Drawer.Screen name="Trabajando" component={Trabajando} options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="hammer" size={22} color={color} />
   )}}/>  
-  <Drawer.Screen name="Métodos de pago" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+  <Drawer.Screen name="Métodos de pago" component={MetodoPago} options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="card" size={22} color={color} />
   )}}/>  
-  <Drawer.Screen name="Perfil" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+  <Drawer.Screen name="Perfil" component={PerfilCliente} options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="person" size={22} color={color} />
   )}}/>
-  <Drawer.Screen name="Configuración" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+  <Drawer.Screen name="Configuración" component={Configuracion} options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="cog" size={22} color={color} />
   )}}/>
-  <Drawer.Screen name="Soporte" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
+  <Drawer.Screen name="Soporte" component={Soporte} options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="build" size={22} color={color} />
   )}}/>
 
