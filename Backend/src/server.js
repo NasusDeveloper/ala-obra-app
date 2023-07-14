@@ -8,8 +8,6 @@ import { createRoles } from "./libs/initialSetup.js"
 import authRoutes from "./routes/auth.routes.js"
 import usersRoutes from "./routes/users.routes.js"
 import solicitudRoutes from "./routes/solicitud.routes.js"
-import trabajadorRoutes from "./routes/trabajador.routes.js"
-import { errorHandler } from './middlewares/errorHandler.js'
 
 const app = express()
 createRoles()
@@ -34,10 +32,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes)
 app.use("/api/users", usersRoutes)
-app.use("/api/solicitud", solicitudRoutes)
-app.use("/api/signupTrabajador", trabajadorRoutes)
-app.use(errorHandler)
-
+app.use("/api/createSolicitud", solicitudRoutes)
 export default app
 
 app.listen(8000)
