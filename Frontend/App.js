@@ -23,7 +23,7 @@ export default function App() {
 
     if (token) {
       // Redirigir al usuario a la pantalla de inicio con el Drawer
-      navigation.reset({
+      useNavigation.reset({
         index: 0,
         routes: [{ name: 'HomeScreen' }],
       });

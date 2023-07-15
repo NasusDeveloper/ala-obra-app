@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import axios from "axios"
 import { useState } from "react"
 
@@ -28,6 +28,18 @@ const UserLoginScreen = () => {
     setPassword('')
     setTc('')
   }
+
+  useEffect(() => {
+    checkToken() //Verificar si hay un token almacenado
+  }, [])
+
+  const checkToken = async () => {
+    //Verificar si hay un token almacenado
+    const token = await AsyncStorage.getItem("token")
+    if(token){
+      navigation.navigate("HomeScreen")//Si hay un token, redirigir al usuario a la pantalla de inicio
+    }
+  }
  
   const handleFormSubmit = async () => {
     if (email && password) {
@@ -52,6 +64,9 @@ const UserLoginScreen = () => {
 
         //Guardar el token en el almacenamiento local
         await AsyncStorage.setItem("token", response.data.token)
+
+        //Configurar el token en el encabezado de autorización
+        axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`
 
         //Redirigir al usuario a la pantalla de inicio
         navigation.navigate("HomeScreen")

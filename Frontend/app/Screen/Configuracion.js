@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-const PerfilCliente = () => {
+const Configuracion = () => {
   return (
     <View
       style={{
@@ -9,9 +9,9 @@ const PerfilCliente = () => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text> Perfil de Cliente en construcción🎉</Text>
+      <Text> Página de Configuracion en construcción🎉</Text>
     </View>
   );
 };
 
-export default PerfilCliente;
+export default Configuracion;

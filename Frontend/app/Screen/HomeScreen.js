@@ -6,13 +6,13 @@ import { createDrawerNavigator, } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import CustomDrawer from "./CustomDrawer";
-import SolicitudScreen from './SolicitudScreen';
-import Trabajando from "./auth/Trabajando";
-import MetodoPago from "./auth/MetodoPago";
-import PerfilCliente from "./auth/PerfilCliente";
-import Configuracion from "./auth/Configuracion";
-import Soporte from "./auth/Soporte";
+import CustomDrawer from "./CustomDrawer"
+import SolicitudScreen from './SolicitudScreen'
+import Trabajando from "./Trabajando"
+import MetodoPago from "./MetodoPago"
+import PerfilCliente from "./PerfilCliente"
+import Configuracion from "./Configuracion"
+import Soporte from "./Soporte"
 
 const Drawer = createDrawerNavigator()
 const Stack = createNativeStackNavigator();

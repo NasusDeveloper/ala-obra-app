@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Image, TouchableOpacity, Text } from "react-native";
 import { styles, toastConfig } from "../../style"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as ImagePicker from "expo-image-picker"
 import axios from "axios"
 
@@ -49,21 +50,31 @@ const FormularioSolicitud = () => {
 
   const handleFormSubmit = async () => {
     try {
+      //Obtener el token almacenado
+      const token = await AsyncStorage.getItem("token")
+      console.log("Token:", token)
+      //Configurar el token en el encabezado de autorización
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
+
       // Realizar la solicitud a través de Axios
-      const response = await axios.post("http://192.168.100.171:8000/api/auth/solicitud", {
+      const response = await axios.post("http://192.168.100.171:8000/api/auth/createSolicitud", {
         nameSolicitud,
         descripcion,
         fotos,
         fechaInicio,
         fechaFin,
-      });
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}` //Incluir el token en el encabezado de autorización
+        }
+      })
 
       // Procesar la respuesta del backend
       console.log(response.data);
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
   return (
     <View style={{ marginHorizontal: 30 }}>
@@ -122,9 +133,18 @@ const FormularioSolicitud = () => {
       <View style={{width: 200, alignSelf: "center", margin: 20}}>
         <Button title="Aceptar" onPress={handleFormSubmit} color="#8200d6"/>
       </View>
+
       </View>
     </View>
   )
 }
 
-export default FormularioSolicitud;
+
+     
+
+
+export default FormularioSolicitud
+
+
+
+
