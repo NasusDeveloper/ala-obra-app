@@ -9,6 +9,10 @@ import RegisterScreen from './app/Screen/auth/RegisterScreen';
 import SendPasswordResetEmailScreen from './app/Screen/auth/SendPasswordResetEmailScreen';
 import HomeScreen from './app/Screen/HomeScreen';
 import RegisterTrabajadorScreen from './app/Screen/auth/RegisterTrabajadorScreen';
+import MetodoPago from './app/Screen/MetodoPago';
+import PerfilCliente from './app/Screen/PerfilCliente';
+import Soporte from './app/Screen/Soporte'
+import SolicitudSoporte from './app/Screen/SolicitudSoporte';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +68,25 @@ export default function App() {
           component={HomeScreen}
           options={{ headerShown: false }}
         />
+
+        <Stack.Screen
+          name="MetodoPago"
+          component={MetodoPago}
+          options={{title: 'MetodPago'}}
+        />
+        <Stack.Screen 
+        name="PerfilCliente" 
+        component={PerfilCliente}
+        options={{title: 'PerfilCliente'}} />
+
+        <Stack.Screen name="Soporte"
+         component={Soporte}
+         options={{title: 'Soporte'}} />
+
+        <Stack.Screen 
+        name="SolicitudSoporte" 
+        component={SolicitudSoporte} 
+        options={{title: 'SolicitudSoporte'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
