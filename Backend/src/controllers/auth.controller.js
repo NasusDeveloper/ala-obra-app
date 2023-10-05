@@ -2,6 +2,7 @@ import config from "../config.js"
 import Role from "../models/roles.js"
 import users from "../models/users.js"
 import trabajador from "../models/trabajador.js"
+import solicitud from "../models/solicitud.js"
 import jwt from "jsonwebtoken"
 
 export const signup = async (req, res) => {
@@ -130,3 +131,83 @@ export const signin = async (req, res) => {
     }
     
 }
+
+// Crear una nueva solicitud
+export const crearSolicitud = async (req, res) => {
+    try {
+        const { nameSolicitud, descripcion, estado } = req.body;
+
+      // Crear una nueva instancia de Solicitud
+        const nuevaSolicitud = new solicitud({
+        nameSolicitud,
+        descripcion,
+        estado,
+    });
+
+      // Guardar la solicitud en la base de datos
+        await nuevaSolicitud.save();
+
+        res.status(201).json({ message: "Solicitud creada exitosamente" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
+};
+
+  // Obtener todas las solicitudes
+export const obtenerSolicitudes = async (req, res) => {
+    try {
+        const solicitudes = await solicitud.find();
+        res.status(200).json(solicitudes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
+};
+
+  // Obtener una solicitud por su ID
+export const obtenerSolicitudPorId = async (req, res) => {
+    try {
+        const solicitud = await solicitud.findById(req.params.id);
+        if (!solicitud) {
+        return res.status(404).json({ error: "Solicitud no encontrada" });
+    }
+        res.status(200).json(solicitud);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
+};
+
+  // Actualizar una solicitud por su ID
+export const actualizarSolicitud = async (req, res) => {
+    try {
+        const { nameSolicitud, descripcion, estado } = req.body;
+        const solicitudActualizada = await solicitud.findByIdAndUpdate(
+        req.params.id,
+        { nameSolicitud, descripcion, estado },
+        { new: true }
+    );
+    if (!solicitudActualizada) {
+        return res.status(404).json({ error: "Solicitud no encontrada" });
+    }
+        res.status(200).json({ message: "Solicitud actualizada correctamente" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
+};
+
+  // Eliminar una solicitud por su ID
+export const eliminarSolicitud = async (req, res) => {
+    try {
+        const solicitudEliminada = await solicitud.findByIdAndRemove(req.params.id);
+        if (!solicitudEliminada) {
+        return res.status(404).json({ error: "Solicitud no encontrada" });
+    }
+        res.status(200).json({ message: "Solicitud eliminada correctamente" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
+};

@@ -1,29 +1,21 @@
-import mongoose from "mongoose"
+import { Schema, model } from "mongoose";
 
-const solicitudSchema = new mongoose.Schema({
+const solicitudSchema = new Schema({
     nameSolicitud: {
         type: String,
-        required: true,
-        minlength: 10,
+        require: true,
+        minlenght: 10,
     },
     descripcion: {
         type: String,
-        required: true,
-        maxlength: 100,
+        require: true,
+        maxlenght: 100,
     },
-    fotos: [
-        {
-            data: Buffer, //Datos binarios de la imagen
-            contentType: String, //Tipo de contenido de la imagen
-        },
-    ],
     estado: {
         type: String,
-        enum: ['monstrando', 'completada', 'eliminada', 'revision'],
-        default: 'mostrando', //estado por defecto al crear una solicitud
+        enum: ["mostrando", "completada", "eliminada", "revision"],
+        default: "mostrando",
     },
 })
 
-const Solicitud = mongoose.model('Solicitud', solicitudSchema)
-
-export default Solicitud
+export default model ("solicitud", solicitudSchema)

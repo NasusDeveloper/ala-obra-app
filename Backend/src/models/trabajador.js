@@ -6,12 +6,12 @@ const trabajadorSchema = new Schema({
     trabajadorname: {
         type: String,
         unique: true,
-        required: true,
+        require: true,
     },
     rut: {
         type: String,
         unique: true,
-        required: true,
+        require: true,
     },
     email: {
         type: String,
@@ -19,7 +19,7 @@ const trabajadorSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        require: true
     },
     direcction: {
         type: String

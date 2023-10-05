@@ -5,20 +5,22 @@ import bcrypt from "bcryptjs"
 const userSchema = new Schema({
     username: {
         type: String,
-        unique: true
+        unique: true,
+        require: true,
     },
     rut: {
         type: String,
         unique: true,
-        required: true,
+        require: true,
     },
     email: {
         type: String,
-        unique: true
+        unique: true,
+        require: true,
     },
     password: {
         type: String,
-        required: true
+        require: true
     },
     direcction: {
         type: String
