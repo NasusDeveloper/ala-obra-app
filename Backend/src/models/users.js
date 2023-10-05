@@ -9,7 +9,8 @@ const userSchema = new Schema({
     },
     rut: {
         type: String,
-        unique: true
+        unique: true,
+        required: true,
     },
     email: {
         type: String,
@@ -17,7 +18,7 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        require: true
+        required: true
     },
     direcction: {
         type: String

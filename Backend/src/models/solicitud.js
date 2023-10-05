@@ -1,35 +1,29 @@
-import { Schema, model } from "mongoose"
+import mongoose from "mongoose"
 
-//Crea los campos de los usuarios
-const solicitudSchema = new Schema({
+const solicitudSchema = new mongoose.Schema({
     nameSolicitud: {
         type: String,
-        require: true,
-        minlength: 10
+        required: true,
+        minlength: 10,
     },
     descripcion: {
         type: String,
-        maxlength: 100
+        required: true,
+        maxlength: 100,
     },
-    fotos: {
-        type: [String],
-        validate: {
-            validator: (value) => value.length <= 5,
-            message: "Se permite un maximo de 5 fotos" 
-        }
+    fotos: [
+        {
+            data: Buffer, //Datos binarios de la imagen
+            contentType: String, //Tipo de contenido de la imagen
+        },
+    ],
+    estado: {
+        type: String,
+        enum: ['monstrando', 'completada', 'eliminada', 'revision'],
+        default: 'mostrando', //estado por defecto al crear una solicitud
     },
-    fechaInicio: {
-        type: Date,
-        require: true
-    },
-    fechaFin: {
-        type: Date,
-        require: true
-    },
-    
-    
-}, {
-    timestamps: true
 })
 
-export default model ("solicitud", solicitudSchema)
+const Solicitud = mongoose.model('Solicitud', solicitudSchema)
+
+export default Solicitud

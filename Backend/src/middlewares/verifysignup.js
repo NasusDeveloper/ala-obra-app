@@ -1,5 +1,6 @@
 import {ROLES} from "../models/roles.js"
 import users from "../models/users.js"
+import trabajador from "../models/trabajador.js"
 
 export const chekDuplicateUsernameOrEmail = async (req, res, next) => {
 
@@ -21,6 +22,28 @@ export const chekDuplicateUsernameOrEmail = async (req, res, next) => {
     
 
 }
+
+export const chekDuplicateTrabajadornameOrEmail = async (req, res, next) => {
+
+    try {
+        const trabajadores = await trabajador.finOne({trabajadorname: req.body.trabajadorname})
+
+        if (trabajadores) throw new Error("El usuario ya existe")
+
+        const email = await trabajador.finOne({email: req.body.email})
+
+        if (email) throw new Error("Ya existe")
+
+        next()
+    } catch (error) {
+        console.log(error)
+        res.json({mensage: error})
+    }
+
+    
+
+}
+
 
 export const checkRolesExisted = (req, res, next) => {
     if (req.body.roles) {

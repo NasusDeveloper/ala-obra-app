@@ -6,11 +6,10 @@ import * as ImagePicker from "expo-image-picker"
 import axios from "axios"
 
 const FormularioSolicitud = () => {
-  const [nameSolicitud, setNameSolicitud] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [fotos, setFotos] = useState([]);
-  const [fechaInicio, setFechaInicio] = useState("");
-  const [fechaFin, setFechaFin] = useState("");
+  const [nameSolicitud, setNameSolicitud] = useState("")
+  const [descripcion, setDescripcion] = useState("")
+  const [estado, setEstado] = useState("mostrando")
+  const [fotos, setFotos] = useState([])
 
   const handleNameSolicitudChange = (Text) => {
     setNameSolicitud(Text);
@@ -18,14 +17,6 @@ const FormularioSolicitud = () => {
 
   const handleDescripcionChange = (Text) => {
     setDescripcion(Text);
-  };
-
-  const handleFechaInicioChange = (Text) => {
-    setFechaInicio(Text);
-  };
-
-  const handleFechaFinChange = (Text) => {
-    setFechaFin(Text);
   };
 
   const handleImageUpload = async () => {
@@ -50,27 +41,42 @@ const FormularioSolicitud = () => {
 
   const handleFormSubmit = async () => {
     try {
+
       //Obtener el token almacenado
       const token = await AsyncStorage.getItem("token")
       console.log("Token:", token)
+
       //Configurar el token en el encabezado de autorización
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
-      // Realizar la solicitud a través de Axios
-      const response = await axios.post("http://192.168.100.171:8000/api/auth/createSolicitud", {
-        nameSolicitud,
-        descripcion,
-        fotos,
-        fechaInicio,
-        fechaFin,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}` //Incluir el token en el encabezado de autorización
-        }
+      const formData = new FormData()
+
+      fotos.forEach((foto, index) => {
+        formData.append(`fotos[${index}]`, {
+          uri: foto,
+          name: `photos_${index}.jpg`,
+          type: 'image/jpeg'
+        })
       })
+
+      formData.append("nameSolicitud", nameSolicitud)
+      formData.append("descripcion", descripcion)
+      formData.append("estado", estado)
+
+      const response = await axios.post(
+        "http://192.168.100.171:8000/api/auth/crearSolicitud",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data", //Importante para enviar archivos
+          }
+        }
+      )
 
       // Procesar la respuesta del backend
       console.log(response.data);
+      clearTextInput() //Limpia los campos despues de enviar la solicitud
     } catch (error) {
       console.error(error);
     }
@@ -101,33 +107,13 @@ const FormularioSolicitud = () => {
       </View>
 
       <View style={{ width: 200, alignSelf: 'center', margin: 20}}>
-        <Button title="Seleccionar Fotos" onPress={handleImageUpload} color="#8200d6" />
+        <Button title="Seleccionar Fotos" onPress={handleImageUpload} color="#8200d6" name="fotos" />
       </View>
 
       <View>
         {fotos.map((foto, index) => (
           <Image key={index} source={{ uri: foto }} style={{ width: 200, height: 200 }} />
         ))}
-      </View>
-
-      <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
-      <TextInput
-        style={styles.input}
-        placeholder="Fecha de inicio"
-        onChangeText={handleFechaInicioChange}
-        value={fechaInicio}
-        onPress={console.log(fechaInicio)}
-      />
-      </View>
-
-      <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
-      <TextInput
-        style={styles.input}
-        placeholder="Fecha de fin"
-        onChangeText={handleFechaFinChange}
-        value={fechaFin}
-        onPress={console.log(fechaFin)}
-      />
       </View>
 
       <View style={{width: 200, alignSelf: "center", margin: 20}}>
@@ -137,11 +123,7 @@ const FormularioSolicitud = () => {
       </View>
     </View>
   )
-}
-
-
-     
-
+} 
 
 export default FormularioSolicitud
 

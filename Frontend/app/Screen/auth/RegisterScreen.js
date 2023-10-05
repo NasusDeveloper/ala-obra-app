@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, SafeAreaView, Keyboard, ToastAndroid } from "react-native";
+import { View, Text, SafeAreaView, ToastAndroid } from "react-native";
 import { useState } from "react";
 import { ScrollView, TextInput, } from "react-native-gesture-handler";
 import { styles, toastConfig } from "../../../style";
@@ -10,15 +10,18 @@ import { useNavigation } from "@react-navigation/native";
 import { TouchableWithoutFeedback } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import axios from "axios";
+
 const RegisterScreen = () => {
+
   const [name, setUserName] = useState("")
   const [rut, setRut] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [password_confirmation, setPassword_confirmation] = useState("")
   const [direcction, setDirecction] = useState("")
-  const [roles, setRoles] = useState("Cliente")
+  const [roles, setRoles] = useState("cliente")
   const [tc, setTc] = useState(false)
+
   const clearTextInput = () => {
     setUserName("")
     setRut("")
@@ -26,10 +29,12 @@ const RegisterScreen = () => {
     setPassword("")
     setPassword_confirmation("")
     setDirecction("")
-    setRoles("Cliente")
+    setRoles("cliente")
     setTc(false)
   }
+
   const navigation = useNavigation()
+  
   const handleFormSubmit = () => {
     if (name && rut &&email && password && password_confirmation && direcction && tc) {
       if(password === password_confirmation) {
