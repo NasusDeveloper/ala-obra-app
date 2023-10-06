@@ -13,6 +13,10 @@ import MetodoPago from './app/Screen/MetodoPago';
 import PerfilCliente from './app/Screen/PerfilCliente';
 import Soporte from './app/Screen/Soporte'
 import SolicitudSoporte from './app/Screen/SolicitudSoporte';
+import HomeTrabajadorScreen from './app/Screen/HomeTrabajadorScreen'
+import PerfilTrabajador from './app/Screen/PerfilTrabajador';
+import TrabajadorEnCamino from './app/Screen/TrabajadorEnCamino';
+import CodigoQRTrabajador from './app/Screen/CodigoQRTrabajador';
 
 const Stack = createNativeStackNavigator();
 
@@ -70,6 +74,12 @@ export default function App() {
         />
 
         <Stack.Screen
+          name="HomeTrabajadorScreen"
+          component={HomeTrabajadorScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
           name="MetodoPago"
           component={MetodoPago}
           options={{title: 'MetodPago'}}
@@ -79,9 +89,23 @@ export default function App() {
         component={PerfilCliente}
         options={{title: 'PerfilCliente'}} />
 
+        <Stack.Screen 
+        name="PerfilTrabajador" 
+        component={PerfilTrabajador}
+        options={{title: 'PerfilTrabajador'}} />
+
+        <Stack.Screen 
+        name="TrabajadorEnCamino" 
+        component={TrabajadorEnCamino}
+        options={{title: 'TrabajadorEnCamino'}} />
+
         <Stack.Screen name="Soporte"
-         component={Soporte}
-         options={{title: 'Soporte'}} />
+          component={Soporte}
+          options={{title: 'Soporte'}} />
+
+        <Stack.Screen name="CodigoQRTrabajador"
+          component={CodigoQRTrabajador}
+          options={{title: 'CodigoQRTrabajador'}} />
 
         <Stack.Screen 
         name="SolicitudSoporte" 

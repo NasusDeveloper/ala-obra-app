@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 const solicitudSchema = new Schema({
     nameSolicitud: {
@@ -13,9 +13,26 @@ const solicitudSchema = new Schema({
     },
     estado: {
         type: String,
-        enum: ["mostrando", "completada", "eliminada", "revision"],
-        default: "mostrando",
+        enum: [
+            "pendiente", 
+            "completada", 
+            "eliminada", 
+            "revision", 
+            "en progreso", 
+            "aceptada",
+            "pendiente de inicio"
+            ],
+        default: "pendiente",
     },
+    cliente: {
+        type: Schema.Types.ObjectId,
+        ref: "users",
+        require: true,
+    },
+    trabajadorQueAcepta: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "trabajador"
+    }
 })
 
 export default model ("solicitud", solicitudSchema)

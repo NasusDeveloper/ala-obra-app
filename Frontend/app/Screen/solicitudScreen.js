@@ -7,7 +7,7 @@ import axios from "axios";
 const FormularioSolicitud = () => {
   const [nameSolicitud, setNameSolicitud] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [estado, setEstado] = useState("mostrando");
+  const [estado, setEstado] = useState("pendiente");
   const [fotos, setFotos] = useState([])
 
   const handleNameSolicitudChange = (text) => {
@@ -40,6 +40,11 @@ const FormularioSolicitud = () => {
 
   const handleFormSubmit = async () => {
     try {
+      if (!nameSolicitud || !descripcion) {
+        Alert.alert("Campos incompletos", "Por favor complete todos los campos.");
+        return; // Evitar enviar la solicitud si los campos están incompletos
+      }
+
       // Obtener el token almacenado
       const token = await AsyncStorage.getItem("token");
       console.log("Token:", token);

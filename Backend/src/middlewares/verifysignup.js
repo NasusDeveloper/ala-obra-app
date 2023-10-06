@@ -16,10 +16,8 @@ export const chekDuplicateUsernameOrEmail = async (req, res, next) => {
         next()
     } catch (error) {
         console.log(error)
-        res.json({mensage: error})
+        res.json({message: error})
     }
-
-    
 
 }
 
@@ -37,13 +35,10 @@ export const chekDuplicateTrabajadornameOrEmail = async (req, res, next) => {
         next()
     } catch (error) {
         console.log(error)
-        res.json({mensage: error})
-    }
-
-    
+        res.json({message: error})
+    } 
 
 }
-
 
 export const checkRolesExisted = (req, res, next) => {
     if (req.body.roles) {

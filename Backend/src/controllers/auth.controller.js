@@ -41,9 +41,9 @@ export const signup = async (req, res) => {
         [email] = email;
         const [subject, setSubject] = "Registrado con éxito";
         const [message, setMessage] = "Hola "+email+", has sido registrado con éxito. Bienvenido a ALaObra";
-      
+    
         const baseUrl = "http://localhost:8000";
-      
+    
         
 }
 
@@ -82,9 +82,9 @@ export const signupTrabajador = async (req, res) => {
         [email] = email;
         const [subject, setSubject] = "Registrado con éxito";
         const [message, setMessage] = "Hola "+email+", has sido registrado con éxito. Bienvenido a ALaObra";
-      
+
         const baseUrl = "http://localhost:8000";
-      
+
         
 }
 
@@ -93,7 +93,7 @@ export const signinTrabajador = async (req, res) => {
     try {
         const trabajadorFound = await trabajador.findOne({email: req.body.email}).populate("roles")
 
-        if(!trabajadorFound) throw new Error("Usuario no encontrado")
+        if(!trabajadorFound) throw new Error("Trabajador no encontrado")
 
         const matchPassword = await trabajador.comparePassword(req.body.password, trabajadorFound.password)
 
@@ -102,10 +102,10 @@ export const signinTrabajador = async (req, res) => {
         const token = jwt.sign({id: trabajadorFound._id}, config.SECRET, {
             expiresIn: 86400
         })
-        res.json({token})
+        res.json({token, userType: "trabajador"})
     } catch (error) {
         console.log(error)
-        res.json({mesage: error})
+        res.json({message: error})
     }
     
 }
@@ -124,10 +124,10 @@ export const signin = async (req, res) => {
         const token = jwt.sign({id: userFound._id}, config.SECRET, {
             expiresIn: 86400
         })
-        res.json({token})
+        res.json({token, userType: "cliente"})
     } catch (error) {
         console.log(error)
-        res.json({mesage: error})
+        res.json({message: error})
     }
     
 }
@@ -138,41 +138,132 @@ export const crearSolicitud = async (req, res) => {
         const { nameSolicitud, descripcion, estado } = req.body;
 
       // Crear una nueva instancia de Solicitud
+        // const clienteId = req.users.id
         const nuevaSolicitud = new solicitud({
-        nameSolicitud,
-        descripcion,
-        estado,
+            nameSolicitud,
+            descripcion,
+            estado,
+            // cliente: clienteId,
     });
 
       // Guardar la solicitud en la base de datos
-        await nuevaSolicitud.save();
+        const solicitudGuardada = await nuevaSolicitud.save();
 
-        res.status(201).json({ message: "Solicitud creada exitosamente" });
+        res.status(201).json(solicitudGuardada);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error en el servidor" });
     }
 };
 
-  // Obtener todas las solicitudes
+export const aceptarSolicitudes = async (req, res) => {
+    const {solicitudId} = req.params
+    const {trabajadorId} = req.body
+
+    try {
+        //Primero verificar si la solicitud existe
+        const solicitudFound = await solicitud.findById(solicitudId)
+        if (!solicitudFound) {
+            return res.status(404).json({error: "Solicitud no encontrada"})
+        }
+
+        //Verificar si la solicitud ya ha sido aceptada
+        if (solicitudFound.estado === "aceptada") {
+            return res.status(400).json({error: "La solicitud ya ha sido aceptada"})
+        }
+
+        //Actualiza la solicitud con el trabajador que la acepta y cambia el estado
+        solicitudFound.trabajadorQueAcepta = trabajadorId;
+        solicitudFound.estado = "aceptada"
+
+        await solicitud.save()
+        res.json({message: "Solicitud aceptada exitosamente"})
+
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({message: "Error en el servidor"})
+    }
+}
+
+export const solicitudesAceptadasTrabajador = async (req, res) => {
+    
+    const {trabajadorId} = req.params
+
+    try {
+        // Busca todas las solicitudes donde el trabajador es el que acepta
+        const solicitudesAceptadas = await solicitud.find({ trabajadorQueAcepta: trabajadorId });
+
+        res.json(solicitudesAceptadas);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+}
+
+export const solicitudesPendientesTrabajo = async (req, res) => {
+
+    try {
+        const solicitudesPendientesTrabj = await solicitud.find({estado: "pendiente de inicio"})
+        res.json(solicitudesPendientesTrabj)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({error: "Error al obtener las solicitudes pendientes de el trabajador"})
+    }
+}
+
+// export const crearSolicitud = async (req, res) => {
+//     try {
+//         const { nameSolicitud, descripcion, estado } = req.body;
+
+//         // Obtén el ID del cliente actual desde el token o donde lo almacenes en tu aplicación
+//         const clienteId = req.users.id; // Esto depende de cómo manejes la autenticación del usuario
+
+//         // Busca al cliente en la base de datos
+//         const cliente = await users.findById(clienteId);
+
+//         if (!cliente) {
+//             return res.status(404).json({ error: "Cliente no encontrado" });
+//         }
+
+//         // Crea una nueva instancia de Solicitud y enlázala al cliente
+//         const nuevaSolicitud = new solicitud({
+//             nameSolicitud,
+//             descripcion,
+//             estado,
+//             cliente: cliente._id, // Asocia la solicitud con el cliente
+//         });
+
+//         // Guarda la solicitud en la base de datos
+//         await nuevaSolicitud.save();
+
+//         res.status(201).json({ message: "Solicitud creada exitosamente" });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: "Error en el servidor" });
+//     }
+// };
+
+
+
+
 export const obtenerSolicitudes = async (req, res) => {
     try {
-        const solicitudes = await solicitud.find();
-        res.status(200).json(solicitudes);
+        const solicitudesMostrando = await solicitud.find({estado: "pendiente"}).populate("cliente")
+        res.status(200).json(solicitudesMostrando)
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error en el servidor" });
+        console.error(error)
+        res.status(500).json({error: "Error en el servidor"})
     }
-};
+}
 
   // Obtener una solicitud por su ID
 export const obtenerSolicitudPorId = async (req, res) => {
     try {
-        const solicitud = await solicitud.findById(req.params.id);
-        if (!solicitud) {
+        const Solicitud = await solicitud.findById(req.params.id, {estado: "pendiente"});
+        if (!Solicitud) {
         return res.status(404).json({ error: "Solicitud no encontrada" });
     }
-        res.status(200).json(solicitud);
+        res.status(200).json(Solicitud);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Error en el servidor" });
