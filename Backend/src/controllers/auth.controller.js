@@ -211,6 +211,60 @@ export const solicitudesPendientesTrabajo = async (req, res) => {
     }
 }
 
+export const getDatosTrabajador = async (req, res) => {
+    try {
+      // El middleware verifyToken habrá agregado una propiedad `trabajador` al objeto `req`.
+      // Puedes acceder a los datos del trabajador actual a través de `req.trabajador`.
+  
+      if (!req.trabajador) {
+        return res.status(401).json({ error: "No se proporcionó el token o el token es inválido." });
+      }
+  
+      // Obtén los datos del trabajador autenticado
+      const trabajadorAutenticado = req.trabajador;
+  
+      // Ahora puedes acceder a los datos del trabajador:
+      const trabajadorname = trabajadorAutenticado.trabajadorname;
+      const email = trabajadorAutenticado.email;
+      const direction = trabajadorAutenticado.direcction;
+      const roles = trabajadorAutenticado.roles; // Puedes mapear los roles si es necesario
+  
+      // Respondes con los datos del trabajador
+      res.status(200).json({
+        trabajadorname,
+        email,
+        direction,
+        roles,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error en el servidor" });
+    }
+  };
+
+
+
+
+export const updatePassword = async (req, res) => {
+    try {
+        const {trabajadorname} = req.params
+        const {newPassword} = req.body
+
+        const trabajadorData = await trabajador.findOne({trabajadorname})
+        if(!trabajadorData){
+            return res.status(400).json({error: "Trabajador no encontrado"})
+        }
+
+        trabajador.password = newPassword
+        await trabajador.save()
+
+        res.json({message: "Paswword actualizada con exito"})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({error: "Error al actualizar la password"})
+    }
+}
+
 // export const crearSolicitud = async (req, res) => {
 //     try {
 //         const { nameSolicitud, descripcion, estado } = req.body;
@@ -242,8 +296,6 @@ export const solicitudesPendientesTrabajo = async (req, res) => {
 //         res.status(500).json({ error: "Error en el servidor" });
 //     }
 // };
-
-
 
 
 export const obtenerSolicitudes = async (req, res) => {

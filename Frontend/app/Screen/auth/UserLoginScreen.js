@@ -16,7 +16,8 @@ import { TouchableWithoutFeedback } from "react-native";
 const UserLoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [tc, setTc] = useState(false); // Cambié el valor inicial a 'false' para cliente
+  const [tc, setTc] = useState(false); // Checkbox para mantener la sesión iniciada
+  const [isTrabajador, setIsTrabajador] = useState(false); // Nuevo checkbox para ingresar como trabajador
   const navigation = useNavigation();
 
   const clearTextInput = () => {
@@ -46,10 +47,10 @@ const UserLoginScreen = () => {
   const handleFormSubmit = async () => {
     if (email && password) {
       try {
-        let signInUrl = "http://192.168.100.171:8000/api/auth/signinTrabajador";
+        let signInUrl = "http://192.168.100.171:8000/api/auth/signin";
 
         // Verificar el tipo de usuario y ajustar la URL de inicio de sesión
-        if (tc) {
+        if (isTrabajador) {
           signInUrl = "http://192.168.100.171:8000/api/auth/signinTrabajador";
         }
 
@@ -72,22 +73,18 @@ const UserLoginScreen = () => {
           text1: "Inicio de sesión exitoso",
         });
 
-        // Guardar el userType en el almacenamiento local si es un valor válido
         if (userType) {
           await AsyncStorage.setItem("userType", userType);
         }
 
-        // Guardar el token en el almacenamiento local
         await AsyncStorage.setItem("token", token);
 
-        // Configurar el token en el encabezado de autorización
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-        // Redirigir al usuario a la pantalla de inicio adecuada según el userType
-        if (userType === "cliente") {
-          navigation.navigate("HomeScreen");
-        } else if (userType === "trabajador") {
+        if (isTrabajador) {
           navigation.navigate("HomeTrabajadorScreen");
+        } else if (userType === "cliente") {
+          navigation.navigate("HomeScreen");
         }
       } catch (error) {
         console.log("Error al iniciar sesión:", error.message);
@@ -95,10 +92,7 @@ const UserLoginScreen = () => {
       }
     } else {
       console.log("Debe rellenar todos los campos");
-      ToastAndroid.show(
-        "Debe rellenar todos los campos",
-        ToastAndroid.SHORT
-      );
+      ToastAndroid.show("Debe rellenar todos los campos", ToastAndroid.SHORT);
     }
   };
 
@@ -143,6 +137,15 @@ const UserLoginScreen = () => {
               color={tc ? "#4630EB" : undefined}
             />
             <Text style={styles.labelText}>Mantener sesion iniciada </Text>
+          </View>
+
+          <View style={{ flex: 1, flexDirection: "row", marginTop: 10 }}>
+            <Checkbox
+              value={isTrabajador}
+              onValueChange={setIsTrabajador}
+              color={isTrabajador ? "#4630EB" : undefined}
+            />
+            <Text style={styles.labelText}>Ingresar como Trabajador</Text>
           </View>
 
           <View
