@@ -7,7 +7,7 @@ const PerfilTrabajador = () => {
   const navigation = useNavigation()
   const [trabajadorname, setTrabajadorName] = useState('');
   const [email, setEmail] = useState('');
-  const [direction, setDirection] = useState('');
+  const [direcction, setDirecction] = useState('');
   const [roles, setRoles] = useState(['']);
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('')
@@ -22,17 +22,17 @@ const PerfilTrabajador = () => {
     // Realiza una solicitud para obtener los datos del trabajador al cargar el componente
     axios.get("http://192.168.100.171:8000/api/auth/trabajadorMostrar")
       .then(response => {
-        const { trabajadorname, email, direction, roles } = response.data;
+        const { trabajadorname, email, direcction, roles } = response.data;
         setTrabajadorName(trabajadorname);
         setEmail(email);
-        setDirection(direction);
+        setDirecction(direcction);
         setRoles(roles);
       })
       .catch(error => {
         console.error(error);
       })
   }, [trabajadorname]);
-  console.log(trabajadorname, email, direction, roles)
+  console.log(trabajadorname, email, direcction, roles)
 
   const handleEditProfile = () => {
     setEditing(true);
@@ -91,13 +91,13 @@ const PerfilTrabajador = () => {
         <Text style={styles.label}>Dirección:</Text>
         {editing ? (
           <TextInput
-            value={direction}
-            onChangeText={(text) => setDirection(text)}
+            value={direcction}
+            onChangeText={(text) => setDirecction(text)}
             style={styles.input}
             placeholder="Ingrese su dirección"
           />
         ) : (
-          <Text style={styles.value}>{direction}</Text>
+          <Text style={styles.value}>{direcction}</Text>
         )}
       </View>
 
