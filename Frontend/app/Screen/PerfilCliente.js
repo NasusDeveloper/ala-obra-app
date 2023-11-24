@@ -1,19 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native"
+import axios from 'axios';
 
 const PerfilCliente = () => {
   const navigation = useNavigation()
-  const [username, setUsername] = useState('JohnDoe');
-  const [email, setEmail] = useState('johndoe@example.com');
-  const [direction, setDirection] = useState('123 Main St');
-  const [roles, setRoles] = useState(['Usuario']);
-  const [password, setPassword] = useState('********');
+  const [username, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [direcction, setDirecction] = useState('');
+  const [roles, setRoles] = useState(['']);
+  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('')
+  const [editing, setEditing] = useState(false)
   const [paymentMethods, setPaymentMethods] = useState([
     { id: 1, cardNumber: '**** **** **** 1234', cardType: 'visa' },
     { id: 2, cardNumber: '**** **** **** 5678', cardType: 'visa' },
   ]);
-  const [editing, setEditing] = useState(false);
+
+
+  useEffect(() => {
+    // Realiza una solicitud para obtener los datos del trabajador al cargar el componente
+    axios.get("http://192.168.100.171:8000/api/auth/trabajadorMostrar")
+      .then(response => {
+        const { username, email, direcction, roles } = response.data;
+        setUserName(username);
+        setEmail(email);
+        setDirecction(direcction);
+        setRoles(roles);
+      })
+      .catch(error => {
+        console.error(error);
+      })
+  }, [username]);
+  console.log(username, email, direcction, roles)
 
   const handleEditProfile = () => {
     setEditing(true);
@@ -36,6 +55,19 @@ const PerfilCliente = () => {
     navigation.navigate('MetodoPago');
   };
 
+  const handleUpdatePassword = () => {
+    // Realizar una solicitud para actualizar la contraseña
+    axios.put("http://192.168.100.171:8000/api/auth/trabajadorPassword", { newPassword: newPassword })
+      .then(response => {
+        Alert.alert('Éxito', 'Contraseña actualizada correctamente');
+        setNewPassword(''); // Limpiar el campo de nueva contraseña
+      })
+      .catch(error => {
+        console.error(error);
+        Alert.alert('Error', 'No se pudo actualizar la contraseña');
+      });
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.photoContainer}>
@@ -46,7 +78,7 @@ const PerfilCliente = () => {
       </View>
 
       <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Username:</Text>
+        <Text style={styles.label}>Nombre:</Text>
         <Text style={styles.value}>{username}</Text>
       </View>
 
@@ -59,19 +91,19 @@ const PerfilCliente = () => {
         <Text style={styles.label}>Dirección:</Text>
         {editing ? (
           <TextInput
-            value={direction}
-            onChangeText={(text) => setDirection(text)}
+            value={direcction}
+            onChangeText={(text) => setDirecction(text)}
             style={styles.input}
             placeholder="Ingrese su dirección"
           />
         ) : (
-          <Text style={styles.value}>{direction}</Text>
+          <Text style={styles.value}>{direcction}</Text>
         )}
       </View>
 
       <View style={styles.fieldContainer}>
         <Text style={styles.label}>Roles:</Text>
-        <Text style={styles.value}>{roles.join(', ')}</Text>
+        <Text style={styles.value}>{roles ? roles.join(', '): 'Ningun rol asignado'}</Text>
       </View>
 
       <View style={styles.fieldContainer}>
@@ -110,7 +142,7 @@ const PerfilCliente = () => {
       </View>
 
       {editing ? (
-        <Button title="Guardar" onPress={handleSaveProfile} />
+        <Button title="Guardar" onPress={handleUpdatePassword} />
       ) : (
         <Button title="Editar Perfil" onPress={handleEditProfile} />
       )}

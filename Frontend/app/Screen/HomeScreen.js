@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import CustomDrawer from "./CustomDrawer"
 import SolicitudScreen from './SolicitudScreen';
+import TrabajadorCaminoCliente from './TrabajadorCaminoCliente';
 import Trabajando from "./Trabajando"; 
 import PerfilCliente from "./PerfilCliente";
 import Configuracion from "./Configuracion";
@@ -207,7 +208,10 @@ const DrawerNavigator = () => {
   <Drawer.Screen name="Solicitudes" component={SolicitudScreen}  options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="person-outline" size={22} color={color} />
   )}}/>
-    <Drawer.Screen name="Trabajando" component={Trabajando} options={{ drawerIcon: ({color}) =>( 
+    <Drawer.Screen name="Trabajador en camino" component={TrabajadorCaminoCliente} options={{ drawerIcon: ({color}) =>( 
+  <Ionicons name="hammer" size={22} color={color} />
+  )}}/>  
+  <Drawer.Screen name="Trabajando" component={Trabajando} options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="hammer" size={22} color={color} />
   )}}/>  
   <Drawer.Screen name="Perfil" component={PerfilCliente} options={{ drawerIcon: ({color}) =>( 

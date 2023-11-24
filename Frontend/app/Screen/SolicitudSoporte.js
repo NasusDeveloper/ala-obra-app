@@ -7,17 +7,55 @@ const SolicitudSoporteScreen = () => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSendSupportRequest = () => {
-    // Aquí puedes agregar la lógica para enviar la solicitud de soporte
-    // Por ejemplo, puedes hacer una solicitud a un servidor o enviar un correo electrónico al equipo de soporte
+  const handleSendSupportRequest = async () => {
+    try {
+      const requestBody = {
+        name,
+        email,
+        subject,
+        message,
+      };
 
-    // Reiniciamos los campos después de enviar la solicitud
-    setName('');
-    setEmail('');
-    setSubject('');
-    setMessage('');
+      const response = await fetch("http://192.168.100.171:8000/api/auth/crearSolicitudSoporte", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
 
-    Alert.alert('Solicitud Enviada', 'Tu solicitud de soporte ha sido enviada correctamente.');
+      if (response.ok) {
+        setName('');
+        setEmail('');
+        setSubject('');
+        setMessage('');
+        Alert.alert(
+          'Solicitud Enviada',
+          'Tu solicitud de soporte ha sido enviada correctamente.'
+        );
+      } else {
+        throw new Error('Error al enviar la solicitud');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Hubo un problema al enviar la solicitud de soporte.');
+    }
+  };
+
+  const mostrarSolicitudes = async () => {
+    try {
+      const response = await fetch("http://192.168.100.171:8000/api/auth/SolicitudSoporte");
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Solicitudes Creadas:', data.supportRequests);
+        // Aquí puedes manejar la visualización de las solicitudes en tu app
+      } else {
+        throw new Error('Error al obtener las solicitudes');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'Hubo un problema al obtener las solicitudes de soporte.');
+    }
   };
 
   return (
@@ -50,6 +88,7 @@ const SolicitudSoporteScreen = () => {
         multiline
       />
       <Button title="Enviar" onPress={handleSendSupportRequest} />
+      <Button title="Solicitudes Creadas" onPress={mostrarSolicitudes} />
     </View>
   );
 };
