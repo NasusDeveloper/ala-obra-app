@@ -242,6 +242,37 @@ export const getDatosTrabajador = async (req, res) => {
     }
 };
 
+export const getDatosUsuario = async (req, res) => {
+    try {
+      // El middleware verifyToken habrá agregado una propiedad `users` al objeto `req`.
+      // Puedes acceder a los datos del trabajador actual a través de `req.trabajador`.
+
+    if (!req.users) {
+        return res.status(401).json({ error: "No se proporcionó el token o el token es inválido." });
+    }
+
+      // Obtén los datos del trabajador autenticado
+    const UsuarioAutenticado = req.users;
+
+      // Ahora puedes acceder a los datos del trabajador:
+    const username = UsuarioAutenticado.username;
+    const email = UsuarioAutenticado.email;
+    const direcction = UsuarioAutenticado.direcction;
+    const roles = UsuarioAutenticado.roles; // Puedes mapear los roles si es necesario
+
+      // Respondes con los datos del trabajador
+    res.status(200).json({
+        username,
+        email,
+        direcction,
+        roles,
+    });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error en el servidor" });
+    }
+};
+
 export const updatePassword = async (req, res) => {
     try {
         const {trabajadorname} = req.params
