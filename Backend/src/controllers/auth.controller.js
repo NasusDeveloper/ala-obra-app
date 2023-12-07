@@ -4,6 +4,7 @@ import users from "../models/users.js"
 import trabajador from "../models/trabajador.js"
 import solicitud from "../models/solicitud.js"
 import jwt from "jsonwebtoken"
+import nodemailer from "nodemailer"
 
 export const signup = async (req, res) => {
     const {username, rut, email, password, direcction, roles} = req.body 
@@ -37,13 +38,33 @@ export const signup = async (req, res) => {
 
     res.status(200).json({token})
 
-    
-        [email] = email;
-        const [subject, setSubject] = "Registrado con éxito";
-        const [message, setMessage] = "Hola "+email+", has sido registrado con éxito. Bienvenido a ALaObra";
-    
-        const baseUrl = "http://localhost:8000";
-    
+    //Configura el trasportador SMTP
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: 'alaobra3@gmail.com',
+            pass: 'naqb jdyf yafk najt'
+        }
+    })
+
+    //Crear el mensaje de correo electronico
+    const mailOptions = {
+        from: 'nachow71@gmail.com',
+        to: email,
+        subject: 'Confirmación de registro',
+        text: 'Por favor, haga click en el siguiente enlace para confirmar su registro: http://192.168.100.171:8000/api/auth/confirmar/' + email
+    }
+
+    //Envia el correo electronico 
+    transporter.sendMail(mailOptions, (error, info) => {
+        if(error) {
+            console.log(error)
+        } else {
+            console.log("Correo electrónico enviado: " + info.response)
+        }
+    })
         
 }
 

@@ -25,6 +25,10 @@ const userSchema = new Schema({
     direcction: {
         type: String
     },
+    confirmado: {
+        type: Boolean,
+        default: false
+    },
     roles: [{
         ref: "Role",
         type: Schema.Types.ObjectId

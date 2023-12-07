@@ -3,6 +3,7 @@ import * as authCtrl from "../controllers/auth.controller.js"
 import * as verifySignup from "../middlewares/verifysignup.js"
 import * as verifyToken from "../middlewares/verifyToken.js"
 import * as soporteCtrl from "../controllers/soporte.controller.js"
+import * as confirmarCtrl from "../controllers/confirmacion.controller.js"
 
 const router = Router()
 
@@ -20,5 +21,6 @@ router.put("/trabajadorPassword", authCtrl.updatePassword)
 router.put("/usuarioMostrar", verifyToken.verifyToken, authCtrl.getDatosUsuario )
 router.post("/crearSolicitudSoporte", soporteCtrl.createSolicitudSoporte)
 router.get("/SolicitudSoporte", soporteCtrl.getSolicitudSoporte)
+router.get("/confirmar/:email", confirmarCtrl.confirmarCorreo)
 
 export default router
