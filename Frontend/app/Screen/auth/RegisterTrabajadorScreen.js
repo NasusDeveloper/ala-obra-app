@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, SafeAreaView, ToastAndroid } from "react-native";
 import { useState } from "react";
 import { ScrollView, TextInput, } from "react-native-gesture-handler";
@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { TouchableWithoutFeedback } from "react-native";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import axios from "axios";
+import * as DocumentPicker from "expo-document-picker"
 
 const RegisterTrabajadorScreen = () => {
 
@@ -21,6 +22,28 @@ const RegisterTrabajadorScreen = () => {
   const [direcction, setDirecction] = useState("")
   const [roles, setRoles] = useState("trabajador")
   const [tc, setTc] = useState(false)
+  const [pdf, setPdf] = useState(null)
+
+  const formatRut = (text) => {
+    const cleanRut = text.replace(/[^0-9kK]/g, ""); // Remover caracteres no numéricos ni 'k' ni 'K'
+    const rutLength = cleanRut.length;
+  
+    if (rutLength <= 9) {
+      let formattedRut = "";
+  
+      if (rutLength <= 2) {
+        formattedRut = cleanRut.replace(/^(\d{1,2})$/, "$1");
+      } else if (rutLength <= 5) {
+        formattedRut = cleanRut.replace(/^(\d{1,2})(\d{0,3})?$/, "$1.$2");
+      } else if (rutLength <= 8) {
+        formattedRut = cleanRut.replace(/^(\d{1,2})(\d{0,3})(\d{0,3})?$/, "$1.$2.$3");
+      } else {
+        formattedRut = cleanRut.replace(/^(\d{1,2})(\d{0,3})(\d{0,3})(\w{0,1})?$/, "$1.$2.$3-$4");
+      }
+  
+      setRut(formattedRut);
+    }
+  };
 
   const clearTextInput = () => {
     setTrabajadorName("")
@@ -31,12 +54,24 @@ const RegisterTrabajadorScreen = () => {
     setDirecction("")
     setRoles("trabajador")
     setTc(false)
+    setPdf(null)
   }
 
   const navigation = useNavigation()
 
+  const handlePickPdf = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({type: 'application/pdf'})
+      if (result.type === 'success') {
+        setPdf(result.uri)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const handleFormSubmit = () => {
-    if (name && rut &&email && password && password_confirmation && direcction && tc) {
+    if (name && rut && email && password && password_confirmation && direcction && tc && pdf) {
       if(password === password_confirmation) {
         const formData = {
           trabajadorname: 
@@ -48,7 +83,9 @@ const RegisterTrabajadorScreen = () => {
           direcction: direcction,
           roles: "",
           tc,
+          pdf: pdf,
         }
+
         //Coneccion a axios
         axios
           .post("http://192.168.100.171:8000/api/auth/signupTrabajador", formData)
@@ -92,9 +129,14 @@ const RegisterTrabajadorScreen = () => {
               <TextInput style={styles.input} Value={name} onChangeText={setTrabajadorName} placeholder="Escribe tu Nombre" onPress={console.log(name)} />
             </View>
             <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
-              <Text style={styles.labelText}>Rut: </Text>
-              <TextInput style={styles.input} Value={rut} placeholder="Ingresa tu rut" onChangeText={setRut} onPress={console.log(rut)} KeyboardType='Rut'></TextInput>
-            </View>
+            <Text style={styles.labelText}>Rut: </Text>
+            <TextInput
+              style={styles.input}
+              value={rut}
+              placeholder="Ingresa tu rut"
+              onChangeText={(text) => formatRut(text)}
+            />
+          </View>
             <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
               <Text style={styles.labelText}>Email: </Text>
               <TextInput style={styles.input} Value={email} placeholder="Ingresa tu Correo electronico" onChangeText={setEmail} onPress={console.log(email)} KeyboardType='email-address'></TextInput>
@@ -111,23 +153,22 @@ const RegisterTrabajadorScreen = () => {
               <Text style={styles.labelText}>Direccion: </Text>
               <TextInput style={styles.input} Value={direcction} placeholder="Ingresa tu Direccion" onChangeText={setDirecction} onPress={console.log(direcction)} KeyboardType='roles'></TextInput>
             </View>
+            <View style={[styles.inputWithLabel, {marginBottom: 10}]}>
+              <Text style={styles.labelText}>PDF: </Text>
+              <Button title="Seleccionar PDF" onPress={handlePickPdf} />
+              {pdf && <Text>{pdf}</Text>}
+            </View>
             <View style={{ flex: 1, flexDirection: 'row' , marginTop: 10}}>
               <Checkbox value={tc} onValueChange={setTc} color={tc ? '#4630EB' : undefined} />
               <Text style={styles.labelText}>He leído y acepto los términos y condiciones </Text>
             </View>
-
             <View style={{ width: 200, alignSelf: 'center', margin: 20}}>
-
-              <Button title='Aceptar' onPress={handleFormSubmit} color='#8200d6' />
-
+            <Button title='Aceptar' onPress={handleFormSubmit} color='#8200d6' disabled={!tc} />
             </View>
-
             <View style={{ flex: 1 }}>
-
             <TouchableWithoutFeedback onPress={() => { navigation.navigate("UserLoginScreen") }}>
-                <Text style={{ fontWeight: 'bold', }}>Ya se ha registrado? inicie sesion</Text>
-              </TouchableWithoutFeedback>
-
+              <Text style={{ fontWeight: 'bold', }}>Ya se ha registrado? inicie sesion</Text>
+            </TouchableWithoutFeedback>
             </View>
           </View>
         </View>

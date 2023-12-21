@@ -22,16 +22,26 @@ const RegisterScreen = () => {
   const [roles, setRoles] = useState("cliente")
   const [tc, setTc] = useState(false)
 
-  const clearTextInput = () => {
-    setUserName("")
-    setRut("")
-    setEmail("")
-    setPassword("")
-    setPassword_confirmation("")
-    setDirecction("")
-    setRoles("cliente")
-    setTc(false)
+  const formatRut = (text) => {
+  const cleanRut = text.replace(/[^0-9kK]/g, ""); // Remover caracteres no numéricos ni 'k' ni 'K'
+  const rutLength = cleanRut.length;
+
+  if (rutLength <= 9) {
+    let formattedRut = "";
+
+    if (rutLength <= 2) {
+      formattedRut = cleanRut.replace(/^(\d{1,2})$/, "$1");
+    } else if (rutLength <= 5) {
+      formattedRut = cleanRut.replace(/^(\d{1,2})(\d{0,3})?$/, "$1.$2");
+    } else if (rutLength <= 8) {
+      formattedRut = cleanRut.replace(/^(\d{1,2})(\d{0,3})(\d{0,3})?$/, "$1.$2.$3");
+    } else {
+      formattedRut = cleanRut.replace(/^(\d{1,2})(\d{0,3})(\d{0,3})(\w{0,1})?$/, "$1.$2.$3-$4");
+    }
+
+    setRut(formattedRut);
   }
+};
 
   const navigation = useNavigation()
   
@@ -92,9 +102,14 @@ const RegisterScreen = () => {
               <TextInput style={styles.input} Value={name} onChangeText={setUserName} placeholder="Escribe tu Nombre" onPress={console.log(name)} />
             </View>
             <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
-              <Text style={styles.labelText}>Rut: </Text>
-              <TextInput style={styles.input} Value={rut} placeholder="Ingresa tu rut" onChangeText={setRut} onPress={console.log(rut)} KeyboardType='Rut'></TextInput>
-            </View>
+            <Text style={styles.labelText}>Rut: </Text>
+            <TextInput
+              style={styles.input}
+              value={rut}
+              placeholder="Ingresa tu rut"
+              onChangeText={(text) => formatRut(text)}
+            />
+          </View>
             <View style={[styles.inputWithLabel, { marginBottom: 10 }]}>
               <Text style={styles.labelText}>Email: </Text>
               <TextInput style={styles.input} Value={email} placeholder="Ingresa tu Correo electronico" onChangeText={setEmail} onPress={console.log(email)} KeyboardType='email-address'></TextInput>

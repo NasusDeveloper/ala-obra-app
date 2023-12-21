@@ -17,3 +17,7 @@ export const solicitudesTrabajador = (req, res) => {
 export const solicitudesPendientesTrabajador = (req, res) => {
     res.json("Solicitudes pendientes")
 }
+
+export const posponerSolicitud = (req, res) => {
+    res.json("Se pospuso la solicitud")
+}

@@ -8,4 +8,5 @@ router.get("/", solicitudCtrl.getSolicitudes)
 router.put("/", solicitudCtrl.aceptarSolicitud)
 router.get("/", solicitudCtrl.solicitudesTrabajador)
 router.get("/", solicitudCtrl.solicitudesPendientesTrabajador)
+router.put("/", solicitudCtrl.posponerSolicitud)
 export default router

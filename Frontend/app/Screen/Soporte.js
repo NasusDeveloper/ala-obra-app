@@ -94,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Soporte;
+export default Soporte

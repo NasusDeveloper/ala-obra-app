@@ -14,6 +14,7 @@ const app = express()
 createRoles()
 
 
+
 // Configuración de CORS
 const corsOption = {
     origin: "http://localhost:8080",

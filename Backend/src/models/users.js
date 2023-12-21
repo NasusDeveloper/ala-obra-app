@@ -32,7 +32,17 @@ const userSchema = new Schema({
     roles: [{
         ref: "Role",
         type: Schema.Types.ObjectId
-    }]
+    }],
+    paymentMethods: [{
+        cardNumber: {
+            type: String,
+            required: true
+        },
+        cardType: {
+            type: String,
+            required: true
+        }
+    }],
     
 }, {
     timestamps: true,

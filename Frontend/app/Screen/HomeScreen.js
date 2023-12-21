@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import CustomDrawer from "./CustomDrawer"
+import SolicitudesCLiente from "./SolicitudesCliente"
 import SolicitudScreen from './SolicitudScreen';
 import TrabajadorCaminoCliente from './TrabajadorCaminoCliente';
 import Trabajando from "./Trabajando"; 
@@ -205,7 +206,10 @@ const DrawerNavigator = () => {
   <Drawer.Screen name="Home" component={HomeScreen} options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="home-outline" size={22} color={color} />
   )}}/>
-  <Drawer.Screen name="Solicitudes" component={SolicitudScreen}  options={{ drawerIcon: ({color}) =>( 
+  <Drawer.Screen name="Crear solicitud" component={SolicitudScreen}  options={{ drawerIcon: ({color}) =>( 
+  <Ionicons name="person-outline" size={22} color={color} />
+  )}}/>
+  <Drawer.Screen name="Solicitudes" component={SolicitudesCLiente}  options={{ drawerIcon: ({color}) =>( 
   <Ionicons name="person-outline" size={22} color={color} />
   )}}/>
     <Drawer.Screen name="Trabajador en camino" component={TrabajadorCaminoCliente} options={{ drawerIcon: ({color}) =>( 

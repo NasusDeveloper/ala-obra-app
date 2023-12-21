@@ -30,8 +30,19 @@ const solicitudSchema = new Schema({
         require: true,
     },
     trabajadorQueAcepta: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "trabajador"
+        type: String,
+        ref: "trabajador",
+    },
+    fotos: [{
+        type: String 
+    }],
+    fechaCreada: {
+        type: Date,
+        default: Date.now
+    },
+    fechaAceptada: {
+        type: Date,
+        default: null
     }
 })
 

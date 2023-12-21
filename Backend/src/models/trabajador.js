@@ -27,7 +27,25 @@ const trabajadorSchema = new Schema({
     roles: [{
         ref: "Role",
         type: Schema.Types.ObjectId
-    }]
+    }],
+    paymentMethods: [{
+        cardNumber: {
+            type: String,
+            required: true
+        },
+        cardType: {
+            type: String,
+            required: true
+        }
+    }],
+    pdf: {
+        data: Buffer,
+        contentType: String
+    },
+    confirmado: {
+        type: Boolean,
+        default: false
+    },
     
 }, {
     timestamps: true,

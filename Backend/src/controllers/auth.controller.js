@@ -5,6 +5,7 @@ import trabajador from "../models/trabajador.js"
 import solicitud from "../models/solicitud.js"
 import jwt from "jsonwebtoken"
 import nodemailer from "nodemailer"
+import multer from "multer"
 
 export const signup = async (req, res) => {
     const {username, rut, email, password, direcction, roles} = req.body 
@@ -51,7 +52,7 @@ export const signup = async (req, res) => {
 
     //Crear el mensaje de correo electronico
     const mailOptions = {
-        from: 'nachow71@gmail.com',
+        from: 'alaobra3@gmail.com',
         to: email,
         subject: 'Confirmación de registro',
         text: 'Por favor, haga click en el siguiente enlace para confirmar su registro: http://192.168.100.171:8000/api/auth/confirmar/' + email
@@ -69,45 +70,79 @@ export const signup = async (req, res) => {
 }
 
 export const signupTrabajador = async (req, res) => {
-    const {trabajadorname, rut, email, password, direcction, roles} = req.body 
+    try {
+        const { trabajadorname, rut, email, password, direcction, roles, pdf } = req.body;
 
-    const newTrabajador = new trabajador({
+        const newTrabajador = new trabajador({
         trabajadorname,
         rut,
         email,
-        password: await trabajador.encryptPassword(password), //encripta la password
+        password: await trabajador.encryptPassword(password), // encripta la password
         direcction,
-        roles
+        roles,
+        });
+
+      // Verifica si se ha subido un archivo PDF
+        if (req.file) {
+        const pdfData = req.file.buffer;
+        newTrabajador.pdf = {
+            data: pdfData,
+            contentType: "application/pdf",
+        };
+        }
+
+        if (roles) {
+        // busca el rol que envía el trabajador y lo devuelve en un arreglo de id
+        const foundRoles = await Role.find({ name: { $in: roles } });
+        newTrabajador.roles = foundRoles.map((role) => role._id);
+        } else {
+        // si el usuario no ingresa un rol, por defecto se le asigna el rol Cliente
+        const role = await Role.findOne({ name: "trabajador" });
+        newTrabajador.roles = [role._id];
+        }
+
+        const savedTrabajador = await newTrabajador.save();
+
+      // json web token
+        const token = jwt.sign({ id: savedTrabajador._id }, config.SECRET, {
+        expiresIn: 86400, // 24 horas
+        });
+
+        res.status(200).json({ token });
+
+         //Configura el trasportador SMTP
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: 'alaobra3@gmail.com',
+                pass: 'naqb jdyf yafk najt'
+        }
     })
-    
-    if (roles) {
-        //busca el rol que envía el trabajador y lo devuelve en un arreglo de id
-        const foundRoles = await Role.find({name: {$in: roles}}) 
-        newTrabajador.roles = foundRoles.map(role => role._id) 
-    }
-    else{
-        //si el usuario no ingresa un roll, por defecto se le asigna el rol Cliente
-        const role = await Role.findOne({name: "trabajador"})
-        newTrabajador.roles = [role._id]
+
+    //Crear el mensaje de correo electronico
+        const mailOptions = {
+            from: 'alaobra3@gmail.com',
+            to: email,
+            subject: 'Confirmación de registro',
+            text: 'Por favor, haga click en el siguiente enlace para confirmar su registro: http://192.168.100.171:8000/api/auth/confirmar/' + email
     }
 
-    const savedTrabajador = await newTrabajador.save()
-
-    //json web token
-    const token = jwt.sign({id: savedTrabajador._id}, config.SECRET, {
-        expiresIn: 86400 //24 horas
+    //Envia el correo electronico 
+        transporter.sendMail(mailOptions, (error, info) => {
+            if(error) {
+                console.log(error)
+            }  else {
+                console.log("Correo electrónico enviado: " + info.response)
+        }
     })
 
-    res.status(200).json({token})
-
-        [email] = email;
-        const [subject, setSubject] = "Registrado con éxito";
-        const [message, setMessage] = "Hola "+email+", has sido registrado con éxito. Bienvenido a ALaObra";
-
-        const baseUrl = "http://localhost:8000";
-
-        
-}
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error al registrar el trabajador" });
+    }
+};
 
 export const signinTrabajador = async (req, res) => {
     //Verificar el trabajador
@@ -156,15 +191,28 @@ export const signin = async (req, res) => {
 // Crear una nueva solicitud
 export const crearSolicitud = async (req, res) => {
     try {
-        const { nameSolicitud, descripcion, estado } = req.body;
+        const storage = multer.diskStorage({
+            destination: function(req, file, cb) {
+                cb(null, "../uploads")
+            },
+            filename: function(req, file, cb) {
+                cb(null, Date.now() + '-' + file.originalname)
+            }
+        })
+        const upload = multer({storage: storage})
+        const { nameSolicitud, descripcion, estado, fechaCreada, fechaAceptada } = req.body;
+        const fotos = Array.isArray(req.files) ? req.files.map(file => file.path) : [] 
 
-      // Crear una nueva instancia de Solicitud
+        // Crear una nueva instancia de Solicitud
         // const clienteId = req.users.id
         const nuevaSolicitud = new solicitud({
             nameSolicitud,
             descripcion,
             estado,
-            // cliente: clienteId,
+            fotos,
+            fechaCreada,
+            fechaAceptada,
+            // cliente: req.users.id,
     });
 
       // Guardar la solicitud en la base de datos
@@ -179,7 +227,7 @@ export const crearSolicitud = async (req, res) => {
 
 export const aceptarSolicitudes = async (req, res) => {
     const {solicitudId} = req.params
-    const {trabajadorId} = req.body
+    const {trabajadorRUT} = req.body
 
     try {
         //Primero verificar si la solicitud existe
@@ -194,11 +242,12 @@ export const aceptarSolicitudes = async (req, res) => {
         }
 
         //Actualiza la solicitud con el trabajador que la acepta y cambia el estado
-        solicitudFound.trabajadorQueAcepta = trabajadorId;
+        solicitudFound.trabajadorQueAcepta = trabajadorRUT;
         solicitudFound.estado = "aceptada"
+        solicitudFound.fechaAceptada = new Date()
 
-        await solicitud.save()
-        res.json({message: "Solicitud aceptada exitosamente"})
+        const solicitudAceptada = await solicitudFound.save()
+        res.status(201).json(solicitudAceptada)
 
     } catch (error) {
         console.error(error)
@@ -208,18 +257,52 @@ export const aceptarSolicitudes = async (req, res) => {
 
 export const solicitudesAceptadasTrabajador = async (req, res) => {
     
-    const {trabajadorId} = req.params
+    const {trabajadorRUT} = req.params
 
     try {
         // Busca todas las solicitudes donde el trabajador es el que acepta
-        const solicitudesAceptadas = await solicitud.find({ trabajadorQueAcepta: trabajadorId });
+        const solicitudesAceptadas = await solicitud.find({ trabajadorQueAcepta: trabajadorRUT });
 
-        res.json(solicitudesAceptadas);
+        res.status(201).json(solicitudesAceptadas);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error en el servidor' });
     }
 }
+
+export const obtenerSolicitudesCliente = async (req, res) => {
+    const clienteId = req.query.cliente;
+    try {
+        const solicitudes = await solicitud.find({ cliente: clienteId, estado: { $in: ['pendiente', 'aceptada', 'pendiente de inicio', 'en progreso', 'completada'] }});
+        res.json(solicitudes);
+    } catch (error) {
+        console.error('Error al obtener las solicitudes del cliente:', error);
+        res.status(500).json({ error: 'Error al obtener las solicitudes del cliente' });
+    }
+};
+
+
+export const posponerSolicitud = async (req, res) => {
+    const { solicitudId } = req.params;
+    const { estado } = req.body;
+
+    try {
+      // Verifica si la solicitud existe
+        const solicitudEncontrada = await solicitud.findById(solicitudId);
+        if (!solicitudEncontrada) {
+            return res.status(404).json({ error: 'Solicitud no encontrada' });
+        }
+
+      // Cambia el estado de la solicitud a 'pendiente de inicio'
+        solicitudEncontrada.estado = estado;
+        const solicitudActualizada = await solicitudEncontrada.save();
+
+        res.status(200).json({ message: 'Solicitud pospuesta correctamente', solicitud: solicitudActualizada });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error en el servidor' });
+    }
+};
 
 export const solicitudesPendientesTrabajo = async (req, res) => {
 
@@ -232,120 +315,100 @@ export const solicitudesPendientesTrabajo = async (req, res) => {
     }
 }
 
-export const getDatosTrabajador = async (req, res) => {
+export const iniciarTrabajo = async (req, res) => {
     try {
-      // El middleware verifyToken habrá agregado una propiedad `trabajador` al objeto `req`.
-      // Puedes acceder a los datos del trabajador actual a través de `req.trabajador`.
+        const { solicitudId } = req.params; // Obtén el ID de la solicitud de los parámetros de la URL
+        const updatedSolicitud = await solicitud.findByIdAndUpdate(
+            solicitudId,
+            { estado: 'en progreso' },
+            { new: true }
+        );
 
-    if (!req.trabajador) {
-        return res.status(401).json({ error: "No se proporcionó el token o el token es inválido." });
-    }
-
-      // Obtén los datos del trabajador autenticado
-    const trabajadorAutenticado = req.trabajador;
-
-      // Ahora puedes acceder a los datos del trabajador:
-    const trabajadorname = trabajadorAutenticado.trabajadorname;
-    const email = trabajadorAutenticado.email;
-    const direcction = trabajadorAutenticado.direcction;
-    const roles = trabajadorAutenticado.roles; // Puedes mapear los roles si es necesario
-
-      // Respondes con los datos del trabajador
-    res.status(200).json({
-        trabajadorname,
-        email,
-        direcction,
-        roles,
-    });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error en el servidor" });
-    }
-};
-
-export const getDatosUsuario = async (req, res) => {
-    try {
-      // El middleware verifyToken habrá agregado una propiedad `users` al objeto `req`.
-      // Puedes acceder a los datos del trabajador actual a través de `req.trabajador`.
-
-    if (!req.users) {
-        return res.status(401).json({ error: "No se proporcionó el token o el token es inválido." });
-    }
-
-      // Obtén los datos del trabajador autenticado
-    const UsuarioAutenticado = req.users;
-
-      // Ahora puedes acceder a los datos del trabajador:
-    const username = UsuarioAutenticado.username;
-    const email = UsuarioAutenticado.email;
-    const direcction = UsuarioAutenticado.direcction;
-    const roles = UsuarioAutenticado.roles; // Puedes mapear los roles si es necesario
-
-      // Respondes con los datos del trabajador
-    res.status(200).json({
-        username,
-        email,
-        direcction,
-        roles,
-    });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error en el servidor" });
-    }
-};
-
-export const updatePassword = async (req, res) => {
-    try {
-        const {trabajadorname} = req.params
-        const {newPassword} = req.body
-
-        const trabajadorData = await trabajador.findOne({trabajadorname})
-        if(!trabajadorData){
-            return res.status(400).json({error: "Trabajador no encontrado"})
+        if (!updatedSolicitud) {
+            return res.status(404).json({ message: 'Solicitud no encontrada' });
         }
 
-        trabajador.password = newPassword
-        await trabajador.save()
-
-        res.json({message: "Paswword actualizada con exito"})
+        res.status(200).json(updatedSolicitud);
     } catch (error) {
-        console.error(error)
-        res.status(500).json({error: "Error al actualizar la password"})
+        console.error('Error al iniciar el trabajo:', error);
+        res.status(500).json({ error: 'Error en el servidor' });
+    }
+};
+
+export const obtenerSolicitudesEnProgreso = async (req, res) => {
+    try {
+      // Lógica para obtener las solicitudes con estado "en progreso" desde tu base de datos
+      // Suponiendo que tienes un modelo de solicitud y utilizas Mongoose
+        const solicitudesEnProgreso = await solicitud.find({ estado: 'en progreso' });
+
+        res.status(200).json(solicitudesEnProgreso);
+    } catch (error) {
+        console.error('Error al obtener las solicitudes en progreso:', error);
+        res.status(500).json({ error: 'Error al obtener las solicitudes en progreso' });
+    }
+};
+
+export const mostrarTrabajador = async (req, res) => {
+    try {
+        const Trabajador = await trabajador.findOne({email: req.body.email});
+        if (!Trabajador) {
+            return res.status(404).json({ message: 'Trabajador no encontrado' });
+        }
+        res.status(200).json(Trabajador);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener el trabajador' });
     }
 }
 
-// export const crearSolicitud = async (req, res) => {
-//     try {
-//         const { nameSolicitud, descripcion, estado } = req.body;
+export const actualizarDirecction = async (req, res) => {
+    try {
+      const clienteId = req.params.id; // ID del cliente desde la URL
+      const { direccion } = req.body; // Nueva dirección desde el cuerpo de la solicitud
 
-//         // Obtén el ID del cliente actual desde el token o donde lo almacenes en tu aplicación
-//         const clienteId = req.users.id; // Esto depende de cómo manejes la autenticación del usuario
+      // Encuentra el cliente por su ID y actualiza la dirección
+        const cliente = await cliente.findByIdAndUpdate(clienteId, { direcction: direccion }, { new: true });
 
-//         // Busca al cliente en la base de datos
-//         const cliente = await users.findById(clienteId);
+      res.status(200).json(cliente); // Devuelve el cliente actualizado
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-//         if (!cliente) {
-//             return res.status(404).json({ error: "Cliente no encontrado" });
-//         }
+  // Actualizar contraseña del cliente
+export const actualizarPassword = async (req, res) => {
+    try {
+      const clienteId = req.params.id; // ID del cliente desde la URL
+      const { password } = req.body; // Nueva contraseña desde el cuerpo de la solicitud
 
-//         // Crea una nueva instancia de Solicitud y enlázala al cliente
-//         const nuevaSolicitud = new solicitud({
-//             nameSolicitud,
-//             descripcion,
-//             estado,
-//             cliente: cliente._id, // Asocia la solicitud con el cliente
-//         });
+      // Encuentra el cliente por su ID y actualiza la contraseña
+        const cliente = await cliente.findByIdAndUpdate(clienteId, { password: contrasena }, { new: true });
 
-//         // Guarda la solicitud en la base de datos
-//         await nuevaSolicitud.save();
+      res.status(200).json(cliente); // Devuelve el cliente actualizado
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-//         res.status(201).json({ message: "Solicitud creada exitosamente" });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: "Error en el servidor" });
-//     }
-// };
+export const mostrarDatosUsuario = async (req, res) => {
+  const clienteId = req.params.clienteId; // Obtener el ID del cliente desde los parámetros de la ruta
 
+    try {
+    // Consultar en la base de datos para obtener los datos del cliente
+    const cliente = await cliente.findById(clienteId);
+
+    if (!cliente) {
+        return res.status(404).json({ message: 'Cliente no encontrado' });
+    }
+
+    // Si se encuentra el cliente, enviar los datos al cliente como respuesta
+    res.status(200).json({ cliente });
+    } catch (error) {
+    // Manejo de errores si ocurre algún problema durante la consulta
+    console.error('Error al obtener el perfil del cliente:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
 
 export const obtenerSolicitudes = async (req, res) => {
     try {

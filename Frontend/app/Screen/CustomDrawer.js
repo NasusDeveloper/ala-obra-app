@@ -33,7 +33,7 @@ const CustomDrawer = (props) => {
       
       <View>
         <Text style={{ color:"#fff", fontSize: 18, marginBottom:5}}>Nombre</Text>
-        <Text style={{ color:"#fff"}}>Trabajador o Cliente</Text>
+        <Text style={{ color:"#fff"}}>Cliente/Trabajador</Text>
       </View>
 
       </ImageBackground>

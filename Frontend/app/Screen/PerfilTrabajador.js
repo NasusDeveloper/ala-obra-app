@@ -3,27 +3,26 @@ import { View, Text, TextInput, Button, Alert, StyleSheet, Image, ScrollView, To
 import { useNavigation } from "@react-navigation/native"
 import axios from 'axios';
 
-const PerfilTrabajador = () => {
+const PerfilCliente = () => {
   const navigation = useNavigation()
-  const [trabajadorname, setTrabajadorName] = useState('');
-  const [email, setEmail] = useState('');
-  const [direcction, setDirecction] = useState('');
-  const [roles, setRoles] = useState(['']);
+  const [username, setUserName] = useState('Usuario Ejemplo');
+  const [email, setEmail] = useState('example@example.com');
+  const [direcction, setDirecction] = useState('Dirección de Ejemplo');
+  const [roles, setRoles] = useState(['Trabajador']);
   const [password, setPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('')
-  const [editing, setEditing] = useState(false)
-  const [paymentMethods, setPaymentMethods] = useState([
-    { id: 1, cardNumber: '**** **** **** 1234', cardType: 'visa' },
-    { id: 2, cardNumber: '**** **** **** 5678', cardType: 'visa' },
-  ]);
-
+  const [editing, setEditing] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState([]); // Métodos de pago vacíos
+  const handleCancelEdit = () => {
+    setEditing(false); // Salir del modo de edición
+    // Aquí podrías agregar lógica adicional si es necesario al cancelar la edición
+  };
 
   useEffect(() => {
-    // Realiza una solicitud para obtener los datos del trabajador al cargar el componente
-    axios.get("http://192.168.100.171:8000/api/auth/trabajadorMostrar")
+    // Realiza una solicitud para obtener los datos del cliente al cargar el componente
+    axios.get("http://192.168.100.171:8000/api/auth/usuarioMostrar")
       .then(response => {
-        const { trabajadorname, email, direcction, roles } = response.data;
-        setTrabajadorName(trabajadorname);
+        const { username, email, direcction, roles } = response.data;
+        setUserName(username);
         setEmail(email);
         setDirecction(direcction);
         setRoles(roles);
@@ -31,8 +30,8 @@ const PerfilTrabajador = () => {
       .catch(error => {
         console.error(error);
       })
-  }, [trabajadorname]);
-  console.log(trabajadorname, email, direcction, roles)
+  }, []);
+  console.log(username, email, direcction, roles)
 
   const handleEditProfile = () => {
     setEditing(true);
@@ -79,7 +78,7 @@ const PerfilTrabajador = () => {
 
       <View style={styles.fieldContainer}>
         <Text style={styles.label}>Nombre:</Text>
-        <Text style={styles.value}>{trabajadorname}</Text>
+        <Text style={styles.value}>{username}</Text>
       </View>
 
       <View style={styles.fieldContainer}>
@@ -140,11 +139,21 @@ const PerfilTrabajador = () => {
           <Text style={styles.value}>{password}</Text>
         )}
       </View>
-
-      {editing ? (
-        <Button title="Guardar" onPress={handleUpdatePassword} />
-      ) : (
-        <Button title="Editar Perfil" onPress={handleEditProfile} />
+      
+      {!editing && (
+        <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
+        <Text style={styles.editButtonText}>Editar Perfil</Text>
+      </TouchableOpacity>
+      )}
+      {editing && (
+        <TouchableOpacity style={styles.cancelButton} onPress={handleCancelEdit}>
+        <Text style={styles.cancelButtonText}>Cancelar</Text>
+      </TouchableOpacity>
+      )}
+      {editing && (
+        <TouchableOpacity style={styles.savedButton} onPress={handleSaveProfile}>
+        <Text style={styles.savedButtonText}>Guardar</Text>
+        </TouchableOpacity>
       )}
     </ScrollView>
   );
@@ -218,6 +227,45 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
   },
+  cancelButton: {
+    backgroundColor: '#FF6347',
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  editButton: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  editButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  savedButton: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  savedButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
-export default PerfilTrabajador;
+export default PerfilCliente;

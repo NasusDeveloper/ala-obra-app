@@ -1,14 +1,18 @@
-import React, { useState } from "react";
-import { View, TextInput, Button, Text } from "react-native";
-import { styles } from "../../style";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from "axios";
+import React, { useState } from "react"
+import { View, TextInput, Button, Text } from "react-native"
+import { styles } from "../../style"
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from "axios"
+import { Image, Alert } from "react-native"
+import * as ImagePicker from "expo-image-picker"
 
 const FormularioSolicitud = () => {
   const [nameSolicitud, setNameSolicitud] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [estado, setEstado] = useState("pendiente");
   const [fotos, setFotos] = useState([])
+  const [fechaCreada, setFechaCreada] = useState("")
+  const [fechaAceptada, setFechaAceptada] = useState("")
 
   const handleNameSolicitudChange = (text) => {
     setNameSolicitud(text);
@@ -40,8 +44,8 @@ const FormularioSolicitud = () => {
 
   const handleFormSubmit = async () => {
     try {
-      if (!nameSolicitud || !descripcion) {
-        Alert.alert("Campos incompletos", "Por favor complete todos los campos.");
+      if (!nameSolicitud || !descripcion || fotos.length === 0) {
+        Alert.alert("Campos incompletos", "Por favor complete todos los campos y seleccione al menos una foto");
         return; // Evitar enviar la solicitud si los campos están incompletos
       }
 
@@ -57,6 +61,7 @@ const FormularioSolicitud = () => {
         nameSolicitud,
         descripcion,
         estado,
+        fotos,
       };
 
       // Enviar la solicitud al servidor

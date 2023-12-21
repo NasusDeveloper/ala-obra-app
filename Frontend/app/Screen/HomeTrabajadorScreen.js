@@ -11,6 +11,7 @@ import Configuracion from "./Configuracion";
 import Soporte from "./Soporte";
 import axios from 'axios';
 import TrabajosPendientes from './TrabajosPendientes';
+import moment from 'moment-timezone';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 8,
+        color: '#6A0572', // Morado
     },
     botonAceptar: {
         backgroundColor: '#00BFFF',
@@ -37,6 +39,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
+    fechaText: {
+        fontStyle: 'italic',
+        marginBottom: 5,
+        color: '#FF6F61', // Cambié el color a un tono más visible (naranja-rojo)
+    },
 });
 
 const HomeTrabajadorScreen = () => {
@@ -44,63 +51,63 @@ const HomeTrabajadorScreen = () => {
     const [solicitudSeleccionada, setSolicitudSeleccionada] = useState(null);
 
     useEffect(() => {
-      // Realiza una solicitud GET al servidor para obtener las solicitudes
-    axios.get("http://192.168.100.171:8000/api/auth/solicitudesMostrando")
-        .then((response) => {
-            setSolicitudes(response.data);
-        })
-        .catch((error) => {
-            console.error('Error al obtener las solicitudes:', error);
-        });
+        axios.get("http://192.168.100.171:8000/api/auth/solicitudesMostrando")
+            .then((response) => {
+                const data = response.data.map((item) => ({
+                    ...item,
+                    fechaCreada: moment(item.fechaCreada).tz('America/Santiago').format('DD/MM/YYYY'),
+                    // Ajusta los formatos según tus necesidades
+                    fechaAceptada: moment(item.fechaAceptada).tz('America/Santiago').format('DD/MM/YYYY'),
+                }));
+                setSolicitudes(data);
+            })
+            .catch((error) => {
+                console.error('Error al obtener las solicitudes:', error);
+            });
     }, []);
-    
+
     const handleAceptarSolicitud = (solicitudId) => {
-        // Supongamos que tienes el ID del trabajador actual (trabajadorId) almacenado en algún lugar
-        const trabajadorId = 'ID_DEL_TRABAJADOR_ACTUAL';
+        const trabajadorRUT = 'RUT_DEL_TRABAJADOR_ACTUAL';
     
-        // Realiza una solicitud PUT al servidor para aceptar la solicitud
-        axios.put(`http://192.168.100.171:8000/api/auth/solicitudes/aceptar/${solicitudId}`, {
-          trabajadorId: trabajadorId,
+        axios.put(`http://192.168.100.171:8000/api/auth/aceptar/${solicitudId}`, {
+            trabajadorRUT: trabajadorRUT,
         })
-          .then((response) => {
-            // La solicitud se aceptó correctamente, puedes actualizar la lista de solicitudes
-            // en el frontend para reflejar el cambio
-            // Por ejemplo, puedes eliminar la solicitud de la lista o cambiar su estado
-            // dependiendo de tus necesidades.
-    
-            // Por ejemplo, si deseas eliminar la solicitud de la lista:
-            const nuevasSolicitudes = solicitudes.filter((solicitud) => solicitud._id !== solicitudId);
-            setSolicitudes(nuevasSolicitudes);
-          })
-          .catch((error) => {
-            console.error('Error al aceptar la solicitud:', error);
-          });
-      };
+            .then((response) => {
+                const nuevasSolicitudes = solicitudes.filter((solicitud) => solicitud._id !== solicitudId);
+                setSolicitudes(nuevasSolicitudes);
+            })
+            .catch((error) => {
+                console.error('Error al aceptar la solicitud:', error);
+            });
+    };
 
     return (
         <View>
             <FlatList
-            data={solicitudes}
-            keyExtractor={(item) => item._id.toString()}
-            renderItem={({ item }) => (
-                <View style={styles.solicitudContainer}>
-                    <Text style={styles.solicitudText}>{item.nameSolicitud}</Text>
-                    <Text>{item.descripcion}</Text>
-                    {solicitudSeleccionada !== item._id && (
-                    <TouchableOpacity onPress={() => setSolicitudSeleccionada(item._id)}>
-                    <Text>Ver detalles</Text>
-                    </TouchableOpacity>
-                )}
-                {solicitudSeleccionada === item._id && (
-                    <TouchableOpacity onPress={() => handleAceptarSolicitud(item._id)}>
-                    <View style={styles.botonAceptar}>
-                        <Text style={styles.textoBotonAceptar}>Aceptar</Text>
+                data={solicitudes}
+                keyExtractor={(item) => item._id.toString()}
+                renderItem={({ item }) => (
+                    <View style={styles.solicitudContainer}>
+                        <Text style={styles.solicitudText}>{item.nameSolicitud}</Text>
+                        <Text>Descripción: {item.descripcion}</Text>
+                        <Text style={styles.fechaText}>Creada el: {item.fechaCreada}</Text>
+                        <Text style={styles.fechaText}>Aceptada el: {item.fechaAceptada}</Text>
+                        <Text>Fotos: {item.fotos}</Text>
+                        {solicitudSeleccionada !== item._id && (
+                            <TouchableOpacity onPress={() => setSolicitudSeleccionada(item._id)}>
+                                <Text>Ver detalles</Text>
+                            </TouchableOpacity>
+                        )}
+                        {solicitudSeleccionada === item._id && (
+                            <TouchableOpacity onPress={() => handleAceptarSolicitud(item._id)}>
+                                <View style={styles.botonAceptar}>
+                                    <Text style={styles.textoBotonAceptar}>Aceptar</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )}
                     </View>
-                </TouchableOpacity>
                 )}
-            </View>
-            )}
-        />
+            />
         </View>
     );
 };

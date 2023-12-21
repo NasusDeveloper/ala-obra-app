@@ -1,152 +1,76 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import axios from 'axios';
+import moment from 'moment-timezone';
 
 const TrabajandoScreen = () => {
-  const [workInProgress, setWorkInProgress] = useState(true);
+  const [solicitudesEnProgreso, setSolicitudesEnProgreso] = useState([]);
 
-  const handleToggleStatus = () => {
-    setWorkInProgress((prevStatus) => !prevStatus);
-  };
+  useEffect(() => {
+  // Realizar una solicitud GET al servidor para obtener las solicitudes en progreso
+  axios.get('http://192.168.100.171:8000/api/auth/solicitudesEnProgreso')
+      .then((response) => {
+      const solicitudesFormateadas = response.data.map((solicitud) => ({
+          ...solicitud,
+        // Formatear las fechas a hora chilena
+          fechaCreada: moment(solicitud.fechaCreada).tz('America/Santiago').format('DD/MM/YYYY'),
+          fechaAceptada: moment(solicitud.fechaAceptada).tz('America/Santiago').format('DD/MM/YYYY'),
+      }));
+      setSolicitudesEnProgreso(solicitudesFormateadas);
+      })
+      .catch((error) => {
+      console.error('Error al obtener las solicitudes en progreso:', error);
+      });
+}, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={handleToggleStatus}
-          style={[styles.tab, workInProgress ? styles.activeTab : null]}
-        >
-          <Text style={styles.tabText}>En Progreso</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleToggleStatus}
-          style={[styles.tab, !workInProgress ? styles.activeTab : null]}
-        >
-          <Text style={styles.tabText}>Listo</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.card}>
-        <Image
-          source={require('../../assets/images/trabajo.jpg')}
-          style={styles.image}
-        />
-        <Text style={styles.description}>
-          {workInProgress
-            ? 'Trabajo en progreso...'
-            : 'Trabajo completado. ¡Listo!'}
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Image
-          source={require('../../assets/images/trabajo.jpg')}
-          style={styles.image}
-        />
-        <Text style={styles.description}>
-          {workInProgress
-            ? 'Trabajo en progreso...'
-            : 'Trabajo completado. ¡Listo!'}
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Image
-          source={require('../../assets/images/trabajo.jpg')}
-          style={styles.image}
-        />
-        <Text style={styles.description}>
-          {workInProgress
-            ? 'Trabajo en progreso...'
-            : 'Trabajo completado. ¡Listo!'}
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Image
-          source={require('../../assets/images/trabajo.jpg')}
-          style={styles.image}
-        />
-        <Text style={styles.description}>
-          {workInProgress
-            ? 'Trabajo en progreso...'
-            : 'Trabajo completado. ¡Listo!'}
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Image
-          source={require('../../assets/images/trabajo.jpg')}
-          style={styles.image}
-        />
-        <Text style={styles.description}>
-          {workInProgress
-            ? 'Trabajo en progreso...'
-            : 'Trabajo completado. ¡Listo!'}
-        </Text>
-      </View>
-
-      {workInProgress && (
-        <View style={styles.progressBar}>
-          <View style={styles.progress} />
-        </View>
-      )}
-    </ScrollView>
+    <View style={styles.container}>
+      <FlatList
+        data={solicitudesEnProgreso}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View style={styles.solicitudContainer}>
+            <Text style={styles.solicitudText}>{item.nameSolicitud}</Text>
+            <Text style={styles.descripcionText}>Estado: {item.estado}</Text>
+            <Text style={styles.descripcionText}>Descripción: {item.descripcion}</Text>
+            <Text style={styles.fechaText}>Creada el: {item.fechaCreada}</Text>
+            <Text style={styles.fechaText}>Aceptada el: {item.fechaAceptada}</Text>
+            <Text style={styles.descripcionText}>Fotos: {item.fotos}</Text>
+            <Text style={styles.descripcionText}>Trabajador a cargo: {item.trabajadorQueAcepta}</Text>
+          </View>
+        )}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    padding: 20,
-    backgroundColor: '#F2F2F2',
+  flex: 1,
+  backgroundColor: '#fff',
+  paddingHorizontal: 20,
+  paddingTop: 20,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+  solicitudContainer: {
+  backgroundColor: '#F5F5F5',
+  padding: 16,
+  marginBottom: 10,
+  borderRadius: 8,
   },
-  tab: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#333',
+  solicitudText: {
+  fontSize: 18,
+  fontWeight: 'bold',
+  marginBottom: 8,
+  color: '#6A0572', // Morado
   },
-  activeTab: {
-    backgroundColor: '#333',
+  descripcionText: {
+  color: '#000', // Negro
+  marginBottom: 5,
   },
-  tabText: {
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  card: {
-    backgroundColor: '#FFF',
-    borderRadius: 8,
-    padding: 20,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-  image: {
-    width: 200,
-    height: 200,
-    borderRadius: 8,
-    marginBottom: 20,
-  },
-  description: {
-    fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
-  },
-  progressBar: {
-    height: 10,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 8,
-  },
-  progress: {
-    height: '100%',
-    backgroundColor: '#4CAF50',
-    borderRadius: 8,
-    width: '50%', // Aquí puedes ajustar el porcentaje de progreso
+  fechaText: {
+      fontStyle: 'italic',
+      marginBottom: 5,
+      color: '#FF6F61', // Cambié el color a un tono más visible (naranja-rojo)
   },
 });
 
